@@ -428,13 +428,10 @@
   };
 
   // ─── OPENAI HELPERS ───────────────────────────────────────────
-  async function callOpenAI(apiKey, systemPrompt, userPrompt, maxTokens = 4000) {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  async function callOpenAI(_apiKey, systemPrompt, userPrompt, maxTokens = 4000) {
+    const response = await fetch('/api/chat', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'gpt-4o',
         max_tokens: maxTokens,
@@ -883,7 +880,7 @@ If verdict is FAIL, failures array must contain ONLY BLOCKER-level issues (omit 
   function App() {
     const [state, setState] = useState({
       stage: STAGES.INPUT,
-      apiKey: '',
+      apiKey: null,
       rawDoc: '',
       currentDoc: '',
       finalDoc: '',
@@ -1112,7 +1109,7 @@ If verdict is FAIL, failures array must contain ONLY BLOCKER-level issues (omit 
 
     const handleReset = useCallback(() => {
       setState({
-        stage: STAGES.INPUT, apiKey: state.apiKey, rawDoc: '', currentDoc: '',
+        stage: STAGES.INPUT, apiKey: null, rawDoc: '', currentDoc: '',
         finalDoc: '', iteration: 0, maxIterations: 4, elephantSummary: '',
         issues: [], revisionSummary: '', goldfishResult: null, activityFeed: [],
         loadingSuggestions: {}, error: null, isLoading: false, copyStatus: 'idle',
@@ -1172,7 +1169,7 @@ If verdict is FAIL, failures array must contain ONLY BLOCKER-level issues (omit 
     );
 
     function renderInputScreen(state, setState, onRun) {
-      const canRun = state.rawDoc.trim().length > 50 && state.apiKey.trim().length > 10;
+      const canRun = state.rawDoc.trim().length > 50;
       return React.createElement('main', {
         style: {
           flex: 1,
@@ -1220,28 +1217,12 @@ If verdict is FAIL, failures array must contain ONLY BLOCKER-level issues (omit 
               resize: 'vertical',
             }
           }),
-          React.createElement('div', {
-            style: { display: 'flex', gap: '0.75rem', alignItems: 'stretch', flexWrap: 'wrap' }
-          },
-            React.createElement('input', {
-              type: 'password',
-              value: state.apiKey,
-              onChange: e => setState(s => ({ ...s, apiKey: e.target.value })),
-              placeholder: 'OpenAI API key  (sk-...)',
-              style: {
-                flex: 1,
-                minWidth: 220,
-                padding: '0.7rem 1rem',
-                fontSize: '0.72rem',
-              }
-            }),
-            React.createElement('button', {
-              className: 'btn-primary',
-              onClick: onRun,
-              disabled: !canRun,
-              style: { letterSpacing: '0.12em' },
-            }, 'Run Through The Forge')
-          )
+          React.createElement('button', {
+            className: 'btn-primary',
+            onClick: onRun,
+            disabled: !canRun,
+            style: { letterSpacing: '0.12em', alignSelf: 'flex-end' },
+          }, 'Run Through The Forge')
         ),
 
         // Error
@@ -1249,11 +1230,6 @@ If verdict is FAIL, failures array must contain ONLY BLOCKER-level issues (omit 
           error: state.error,
           onDismiss: () => setState(s => ({ ...s, error: null })),
         }),
-
-        // Footer note
-        React.createElement('p', {
-          style: { fontSize: '0.58rem', color: 'rgba(255,255,255,0.15)', textAlign: 'center' }
-        }, 'API key is stored in memory only — never persisted or logged.')
       );
     }
 
