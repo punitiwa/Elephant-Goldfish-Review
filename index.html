@@ -6,111 +6,131 @@
   <title>DesignDoc Forge</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    /* ── Design tokens ─────────────────────────────────── */
     :root {
-      --bg:            #07070a;
-      --surface:       rgba(255,255,255,0.028);
-      --surface-2:     rgba(255,255,255,0.05);
-      --border:        rgba(255,255,255,0.07);
-      --border-focus:  rgba(245,158,11,0.45);
-      --amber:         #f59e0b;
-      --amber-dim:     rgba(245,158,11,0.11);
-      --amber-border:  rgba(245,158,11,0.3);
-      --red:           #f87171;
-      --red-dim:       rgba(248,113,113,0.1);
-      --green:         #4ade80;
-      --green-dim:     rgba(74,222,128,0.1);
-      --blue:          #60a5fa;
-      --blue-dim:      rgba(96,165,250,0.1);
-      --orange:        #fb923c;
-      --orange-dim:    rgba(251,146,60,0.1);
-      --text:          rgba(255,255,255,0.9);
-      --text-2:        rgba(255,255,255,0.5);
-      --text-3:        rgba(255,255,255,0.22);
-      --mono:          'JetBrains Mono', 'Fira Code', monospace;
-      --serif:         'Instrument Serif', Georgia, serif;
-      --sans:          -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --bg:       #06060c;
+      --s1:       rgba(255,255,255,0.03);
+      --s2:       rgba(255,255,255,0.055);
+      --s3:       rgba(255,255,255,0.08);
+      --b:        rgba(255,255,255,0.07);
+      --bh:       rgba(255,255,255,0.13);
+      --amber:    #f59e0b;
+      --am15:     rgba(245,158,11,0.15);
+      --am08:     rgba(245,158,11,0.08);
+      --am30:     rgba(245,158,11,0.30);
+      --red:      #f87171;
+      --rd10:     rgba(248,113,113,0.12);
+      --grn:      #4ade80;
+      --gn10:     rgba(74,222,128,0.12);
+      --blu:      #93c5fd;
+      --bl10:     rgba(147,197,253,0.12);
+      --orn:      #fb923c;
+      --or10:     rgba(251,146,60,0.12);
+      --t1:       rgba(255,255,255,0.93);
+      --t2:       rgba(255,255,255,0.55);
+      --t3:       rgba(255,255,255,0.28);
+      --t4:       rgba(255,255,255,0.12);
+      --syne:     'Syne', sans-serif;
+      --sans:     'Plus Jakarta Sans', system-ui, sans-serif;
+      --mono:     'JetBrains Mono', monospace;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html, body { height: 100%; }
+    html { height: 100%; }
 
     body {
+      min-height: 100vh;
       background: var(--bg);
-      background-image:
-        radial-gradient(ellipse 70% 40% at 50% -10%, rgba(245,158,11,0.055) 0%, transparent 100%),
-        radial-gradient(rgba(255,255,255,0.045) 1px, transparent 1px);
-      background-size: 100% 100%, 26px 26px;
-      background-attachment: fixed, fixed;
-      color: var(--text);
+      color: var(--t1);
       font-family: var(--sans);
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 15px;
+      line-height: 1.55;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
 
-    #root {
-      position: relative;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+    /* Ambient glows */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -5%, rgba(245,158,11,0.09) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(99,102,241,0.05) 0%, transparent 50%),
+        radial-gradient(ellipse 60% 40% at 100% 80%, rgba(6,182,212,0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
     }
 
-    /* ── Scrollbar ──────────────────────────────────────── */
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
+    /* Grain */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: -100%;
+      width: 300%;
+      height: 300%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+      opacity: 0.035;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    #root { position: relative; z-index: 2; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+    ::selection { background: rgba(245,158,11,0.25); color: var(--t1); }
+    ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb { background: var(--s3); border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(245,158,11,0.25); }
 
-    /* ── Animations ─────────────────────────────────────── */
-    @keyframes fadeUp   { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:translateY(0); } }
     @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
     @keyframes spin     { to { transform:rotate(360deg); } }
-    @keyframes dotPulse { 0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,0.5); } 50% { box-shadow:0 0 0 4px rgba(245,158,11,0); } }
-    @keyframes diamondSpin { to { transform:rotate(360deg); } }
-    @keyframes greenPulse { 0%,100% { box-shadow:0 0 12px 2px rgba(74,222,128,0.2); } 50% { box-shadow:0 0 28px 8px rgba(74,222,128,0.4); } }
+    @keyframes glow-a   { 0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,0.5); } 50% { box-shadow:0 0 0 6px rgba(245,158,11,0); } }
+    @keyframes glow-g   { 0%,100% { box-shadow:0 0 20px rgba(74,222,128,0.15),0 0 0 1px rgba(74,222,128,0.2); } 50% { box-shadow:0 0 50px rgba(74,222,128,0.3),0 0 0 1px rgba(74,222,128,0.3); } }
+    @keyframes scale-in { from { opacity:0; transform:scale(0.94); } to { opacity:1; transform:scale(1); } }
+    @keyframes rot      { to { transform:rotate(360deg); } }
+    @keyframes shimmer  { to { background-position:200% center; } }
 
-    .fade-up { animation: fadeUp 0.35s ease forwards; }
-    .fade-in { animation: fadeIn 0.3s ease forwards; }
-
-    /* ── HEADER ─────────────────────────────────────────── */
-    .header {
-      height: 52px;
+    /* ── HEADER ──────────────────────────────── */
+    .hdr {
+      height: 56px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(7,7,10,0.85);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      padding: 0 24px;
+      border-bottom: 1px solid var(--b);
+      background: rgba(6,6,12,0.75);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       flex-shrink: 0;
-      position: relative;
-      z-index: 20;
       gap: 16px;
     }
 
-    .header-left { display: flex; align-items: center; gap: 10px; }
-
-    .logo-diamond {
-      width: 18px;
-      height: 18px;
-      background: var(--amber);
-      transform: rotate(45deg);
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       flex-shrink: 0;
-      animation: diamondSpin 12s linear infinite;
+      text-decoration: none;
+    }
+
+    .logo-gem {
+      width: 26px;
+      height: 26px;
+      background: conic-gradient(from 0deg, #f59e0b, #fbbf24, #f59e0b);
+      clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+      animation: rot 12s linear infinite;
+      flex-shrink: 0;
     }
 
     .logo-name {
-      font-family: var(--serif);
-      font-size: 16px;
-      color: var(--text);
-      letter-spacing: -0.01em;
+      font-family: var(--syne);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--t1);
+      letter-spacing: -0.02em;
     }
 
     .logo-tag {
@@ -118,17 +138,15 @@
       font-size: 9px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--text-3);
+      color: var(--t4);
+      border: 1px solid var(--b);
       padding: 2px 7px;
-      border: 1px solid var(--border);
     }
 
-    .header-center { display: flex; align-items: center; gap: 0; flex: 1; justify-content: center; overflow: hidden; }
+    /* Pipeline */
+    .pipeline { display: flex; align-items: center; flex: 1; justify-content: center; gap: 0; overflow: hidden; }
 
-    .header-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
-
-    /* Pipeline tracker */
-    .pipeline-step {
+    .pip-step {
       display: flex;
       align-items: center;
       gap: 5px;
@@ -136,384 +154,431 @@
       font-size: 9px;
       letter-spacing: 0.07em;
       text-transform: uppercase;
-      color: var(--text-3);
+      color: var(--t4);
       white-space: nowrap;
+      transition: color 0.3s;
     }
-    .pipeline-step.active { color: var(--amber); }
-    .pipeline-step.done   { color: rgba(255,255,255,0.38); }
+    .pip-step.active { color: var(--amber); }
+    .pip-step.done   { color: var(--t3); }
 
-    .pipeline-node {
-      width: 5px;
-      height: 5px;
+    .pip-dot {
+      width: 5px; height: 5px;
       border-radius: 50%;
-      border: 1px solid currentColor;
+      border: 1.5px solid currentColor;
       flex-shrink: 0;
       transition: all 0.3s;
     }
-    .pipeline-step.done  .pipeline-node { background: rgba(255,255,255,0.38); border-color: rgba(255,255,255,0.38); }
-    .pipeline-step.active .pipeline-node {
+    .pip-step.done  .pip-dot { background: currentColor; }
+    .pip-step.active .pip-dot {
       background: var(--amber);
       border-color: var(--amber);
-      animation: dotPulse 1.8s ease-in-out infinite;
+      animation: glow-a 1.8s ease-in-out infinite;
     }
 
-    .pipeline-line {
-      width: 18px;
-      height: 1px;
-      background: var(--border);
-      flex-shrink: 0;
-    }
-    .pipeline-line.done { background: rgba(245,158,11,0.3); }
+    .pip-line { width: 20px; height: 1px; background: var(--b); flex-shrink: 0; transition: background 0.3s; }
+    .pip-line.done { background: var(--am30); }
 
-    .iter-badge {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--text-3);
-      letter-spacing: 0.06em;
-    }
+    .hdr-meta { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+    .hdr-iter { font-family: var(--mono); font-size: 9px; color: var(--t3); letter-spacing: 0.06em; }
+    .hdr-elapsed { font-family: var(--mono); font-size: 9px; color: var(--amber); opacity: 0.65; min-width: 32px; font-variant-numeric: tabular-nums; }
 
-    .elapsed-timer {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: rgba(245,158,11,0.65);
-      letter-spacing: 0.06em;
-      font-variant-numeric: tabular-nums;
-      min-width: 34px;
-    }
+    /* ── BUTTONS ──────────────────────────────── */
+    .btn { font-family: var(--sans); font-weight: 600; border: none; cursor: pointer; transition: all 0.15s; display: inline-flex; align-items: center; justify-content: center; gap: 7px; letter-spacing: -0.01em; }
 
-    /* ── BUTTONS ─────────────────────────────────────────── */
-    .btn-primary {
-      font-family: var(--mono);
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #08080c;
+    .btn-amber {
+      font-size: 14px;
+      color: #05050a;
       background: var(--amber);
-      border: none;
-      padding: 10px 24px;
-      cursor: pointer;
-      transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+      padding: 12px 28px;
     }
-    .btn-primary:hover:not(:disabled) {
-      background: #fbbf24;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 22px rgba(245,158,11,0.28);
+    .btn-amber:hover:not(:disabled) { background: #fbbf24; transform: translateY(-1px); box-shadow: 0 10px 32px rgba(245,158,11,0.32); }
+    .btn-amber:active:not(:disabled) { transform: none; box-shadow: none; }
+    .btn-amber:disabled { opacity: 0.22; cursor: not-allowed; }
+
+    .btn-glass {
+      font-size: 13px;
+      color: var(--t2);
+      background: var(--s1);
+      border: 1px solid var(--b);
+      padding: 11px 22px;
     }
-    .btn-primary:active:not(:disabled) { transform: translateY(0); }
-    .btn-primary:disabled { opacity: 0.28; cursor: not-allowed; }
+    .btn-glass:hover:not(:disabled) { background: var(--s2); border-color: var(--bh); color: var(--t1); }
+    .btn-glass:disabled { opacity: 0.25; cursor: not-allowed; }
 
     .btn-ghost {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-2);
+      font-size: 12px;
+      color: var(--t3);
       background: transparent;
-      border: 1px solid var(--border);
-      padding: 7px 14px;
-      cursor: pointer;
-      transition: border-color 0.15s, color 0.15s;
+      border: 1px solid var(--b);
+      padding: 8px 16px;
     }
-    .btn-ghost:hover:not(:disabled) { border-color: rgba(255,255,255,0.18); color: var(--text); }
-    .btn-ghost:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--am30); color: var(--amber); }
+    .btn-ghost:disabled { opacity: 0.25; cursor: not-allowed; }
 
-    .btn-suggest {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.06em;
-      color: var(--text-3);
-      background: transparent;
-      border: 1px solid var(--border);
-      padding: 5px 11px;
-      cursor: pointer;
-      transition: all 0.15s;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-    .btn-suggest:hover:not(:disabled) { border-color: var(--amber-border); color: var(--amber); }
-    .btn-suggest:disabled { opacity: 0.35; cursor: not-allowed; }
-
-    /* ── INPUTS ──────────────────────────────────────────── */
-    textarea, input[type="text"], input[type="password"] {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      outline: none;
-      transition: border-color 0.15s;
-    }
-    textarea:focus, input:focus { border-color: var(--border-focus); }
-    textarea::placeholder, input::placeholder { color: var(--text-3); }
-
-    /* ── INPUT SCREEN ────────────────────────────────────── */
+    /* ── INPUT SCREEN ─────────────────────────── */
     .screen-input {
       flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 48px 24px;
-      gap: 40px;
+      padding: 48px 24px 40px;
       overflow-y: auto;
+      gap: 0;
     }
 
-    .hero { text-align: center; max-width: 520px; }
-
-    .hero h2 {
-      font-family: var(--serif);
-      font-size: clamp(28px, 4.5vw, 46px);
-      line-height: 1.12;
-      letter-spacing: -0.02em;
-      color: var(--text);
-      margin-bottom: 14px;
-    }
-
-    .hero p {
-      font-size: 13.5px;
-      color: var(--text-2);
-      line-height: 1.7;
-    }
-
-    .hero-pill {
+    .input-eyebrow {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.1em;
+      font-size: 10px;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: rgba(245,158,11,0.7);
-      background: var(--amber-dim);
-      border: 1px solid var(--amber-border);
-      padding: 4px 10px;
-      margin-bottom: 20px;
+      background: rgba(245,158,11,0.07);
+      border: 1px solid rgba(245,158,11,0.18);
+      padding: 5px 13px;
+      margin-bottom: 24px;
+      animation: fadeIn 0.4s ease forwards;
+    }
+    .eyebrow-pulse {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--amber);
+      animation: glow-a 1.8s ease-in-out infinite;
     }
 
-    .input-box {
-      width: 100%;
+    .input-h1 {
+      font-family: var(--syne);
+      font-weight: 800;
+      font-size: clamp(34px, 5vw, 60px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      text-align: center;
       max-width: 680px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #fff 0%, rgba(245,158,11,0.85) 120%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: fadeUp 0.45s ease 0.05s both;
     }
 
-    .input-box textarea {
+    .input-sub {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--t2);
+      line-height: 1.65;
+      text-align: center;
+      max-width: 480px;
+      margin-bottom: 44px;
+      animation: fadeUp 0.45s ease 0.1s both;
+    }
+
+    .input-form { width: 100%; max-width: 700px; animation: fadeUp 0.45s ease 0.15s both; }
+
+    .doc-textarea {
       width: 100%;
-      min-height: 240px;
-      padding: 16px 18px;
+      min-height: 200px;
+      padding: 18px 20px;
       font-family: var(--mono);
-      font-size: 11.5px;
-      line-height: 1.75;
+      font-size: 12.5px;
+      line-height: 1.8;
+      color: var(--t1);
+      background: var(--s1);
+      border: 1px solid var(--b);
+      outline: none;
       resize: vertical;
+      display: block;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .doc-textarea::placeholder { color: var(--t3); font-style: italic; }
+    .doc-textarea:focus {
+      border-color: rgba(245,158,11,0.45);
+      box-shadow: 0 0 0 1px rgba(245,158,11,0.12), 0 0 48px rgba(245,158,11,0.06);
     }
 
-    .input-footer {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .char-count {
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--text-3);
-      letter-spacing: 0.05em;
-    }
-
-    /* ── WORK SCREEN ─────────────────────────────────────── */
-    .screen-work {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 400px;
-      overflow: hidden;
-    }
-
-    .panel-left {
-      border-right: 1px solid var(--border);
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .panel-right {
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 20px;
-    }
-
-    .panel-header {
+    .input-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 20px 12px;
-      border-bottom: 1px solid var(--border);
-      flex-shrink: 0;
+      gap: 12px;
+      margin-top: 12px;
+      flex-wrap: wrap;
     }
 
-    .panel-label {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-3);
+    .input-row-left { display: flex; align-items: center; gap: 10px; }
+
+    .char-count { font-family: var(--mono); font-size: 10px; color: var(--t4); letter-spacing: 0.05em; }
+
+    /* Summary panel */
+    .summary-panel {
+      width: 100%;
+      max-width: 700px;
+      margin-top: 20px;
+      border: 1px solid rgba(245,158,11,0.18);
+      background: rgba(245,158,11,0.04);
+      overflow: hidden;
+      animation: fadeUp 0.35s ease forwards;
+    }
+
+    .summary-panel-hdr {
       display: flex;
       align-items: center;
-      gap: 6px;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 1px solid rgba(245,158,11,0.12);
     }
 
-    .panel-label-dot {
-      width: 4px;
-      height: 4px;
-      border-radius: 50%;
-      background: var(--amber);
-      opacity: 0.6;
+    .summary-panel-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
 
-    .panel-doc { padding: 20px 24px; flex: 1; }
-
-    /* ── MARKDOWN ────────────────────────────────────────── */
-    .md-doc { font-size: 12.5px; line-height: 1.8; color: var(--text-2); }
-    .md-doc h1 {
-      font-family: var(--serif);
-      font-size: 22px;
-      color: var(--text);
-      margin: 20px 0 8px;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--border);
-    }
-    .md-doc h2 {
-      font-family: var(--serif);
-      font-size: 17px;
-      color: var(--text);
-      margin: 18px 0 6px;
-    }
-    .md-doc h3 {
+    .summary-panel-label {
       font-family: var(--mono);
       font-size: 9px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--text-3);
-      margin: 14px 0 5px;
+      color: rgba(245,158,11,0.6);
     }
-    .md-doc p { margin-bottom: 10px; }
-    .md-doc ul, .md-doc ol { padding-left: 18px; margin-bottom: 10px; }
-    .md-doc li { margin-bottom: 3px; }
-    .md-doc strong { color: var(--text); font-weight: 600; }
-    .md-doc code {
-      font-family: var(--mono);
-      font-size: 11px;
-      background: rgba(245,158,11,0.08);
-      color: rgba(245,158,11,0.85);
-      padding: 1px 5px;
-    }
-    .md-doc pre {
-      background: rgba(255,255,255,0.025);
-      border: 1px solid var(--border);
-      padding: 12px 14px;
-      margin: 10px 0;
-      overflow-x: auto;
-    }
-    .md-doc pre code { background: none; padding: 0; color: var(--text-2); }
-    .md-doc blockquote {
-      border-left: 2px solid var(--amber-border);
-      padding-left: 12px;
-      color: var(--text-3);
-      margin: 8px 0;
-    }
-    .md-doc hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
-    /* ── SUMMARY CARD ───────────────────────────────────── */
-    .summary-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 2px solid var(--amber-border);
-      padding: 13px 15px;
-      animation: fadeUp 0.3s ease forwards;
+    .summary-close {
+      background: none;
+      border: none;
+      color: var(--t3);
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      transition: color 0.15s;
     }
-    .summary-label {
+    .summary-close:hover { color: var(--t1); }
+
+    .summary-content { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+    .summary-what {
+      font-family: var(--syne);
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--t1);
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .summary-what-sub { font-size: 13px; color: var(--t2); line-height: 1.6; margin-top: 4px; }
+
+    .summary-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+
+    .summary-col-hd {
       font-family: var(--mono);
       font-size: 8.5px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(245,158,11,0.6);
-      margin-bottom: 6px;
+      color: var(--t3);
+      margin-bottom: 8px;
     }
-    .summary-text { font-size: 12px; color: var(--text-2); line-height: 1.65; }
 
-    /* ── ISSUE META ROW ─────────────────────────────────── */
+    .summary-pill-list { display: flex; flex-direction: column; gap: 5px; }
+
+    .summary-item {
+      font-size: 12px;
+      color: var(--t2);
+      line-height: 1.4;
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .summary-item::before { content: '—'; color: var(--t4); flex-shrink: 0; }
+
+    .summary-gap-item { color: rgba(248,113,113,0.75); }
+    .summary-gap-item::before { content: '!'; color: rgba(248,113,113,0.4); }
+
+    .summarizing-state {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 18px;
+      font-size: 13px;
+      color: var(--t2);
+    }
+
+    /* ── WORK SCREEN ──────────────────────────── */
+    .screen-work {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      overflow: hidden;
+    }
+
+    .panel-l {
+      border-right: 1px solid var(--b);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .panel-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 22px;
+      border-bottom: 1px solid var(--b);
+      background: rgba(6,6,12,0.5);
+      flex-shrink: 0;
+      gap: 12px;
+    }
+
+    .panel-lbl {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--t3);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .panel-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--amber); opacity: 0.5; }
+
+    .panel-body { flex: 1; overflow-y: auto; padding: 24px 26px; }
+
+    .panel-r { display: flex; flex-direction: column; overflow: hidden; }
+    .panel-r-scroll { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+
+    .empty-doc {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--t4);
+    }
+    .empty-doc-icon { font-size: 32px; opacity: 0.4; }
+    .empty-doc-text { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; }
+
+    /* ── MARKDOWN ─────────────────────────────── */
+    .md { font-size: 13.5px; color: var(--t2); line-height: 1.8; }
+    .md h1 { font-family: var(--syne); font-size: 22px; font-weight: 700; color: var(--t1); margin: 24px 0 10px; padding-bottom: 10px; border-bottom: 1px solid var(--b); letter-spacing: -0.02em; }
+    .md h2 { font-family: var(--syne); font-size: 17px; font-weight: 700; color: var(--t1); margin: 20px 0 7px; letter-spacing: -0.01em; }
+    .md h3 { font-family: var(--mono); font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--t3); margin: 16px 0 6px; }
+    .md p { margin-bottom: 10px; }
+    .md ul, .md ol { padding-left: 20px; margin-bottom: 10px; }
+    .md li { margin-bottom: 4px; }
+    .md strong { color: var(--t1); font-weight: 600; }
+    .md em { color: var(--t2); font-style: italic; }
+    .md code { font-family: var(--mono); font-size: 11.5px; background: rgba(245,158,11,0.09); color: rgba(245,158,11,0.88); padding: 1px 6px; }
+    .md pre { background: var(--s1); border: 1px solid var(--b); padding: 14px 16px; margin: 12px 0; overflow-x: auto; }
+    .md pre code { background: none; padding: 0; color: var(--t2); font-size: 12px; }
+    .md blockquote { border-left: 2px solid var(--am30); padding-left: 14px; color: var(--t3); margin: 8px 0; }
+    .md hr { border: none; border-top: 1px solid var(--b); margin: 18px 0; }
+
+    /* ── LOADING ──────────────────────────────── */
+    .loading-card {
+      background: var(--s1);
+      border: 1px solid var(--b);
+      border-left: 2px solid var(--am30);
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeUp 0.2s ease forwards;
+    }
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(245,158,11,0.15);
+      border-top-color: var(--amber);
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+      flex-shrink: 0;
+    }
+    .loading-text { font-size: 13px; color: var(--t2); flex: 1; }
+
+    /* ── SUMMARY CARD (right panel) ───────────── */
+    .assessment-card {
+      background: var(--s1);
+      border: 1px solid var(--b);
+      border-left: 2px solid rgba(245,158,11,0.4);
+      overflow: hidden;
+      animation: fadeUp 0.3s ease forwards;
+    }
+    .assessment-hdr {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--b);
+    }
+    .assessment-tag {
+      font-family: var(--mono);
+      font-size: 8.5px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: rgba(245,158,11,0.55);
+    }
+    .assessment-body { padding: 12px 14px; font-size: 12.5px; color: var(--t2); line-height: 1.65; }
+
+    /* ── ISSUES META ──────────────────────────── */
     .issues-meta {
       display: flex;
       justify-content: space-between;
       align-items: center;
       font-family: var(--mono);
-      font-size: 9px;
-      color: var(--text-3);
-      letter-spacing: 0.05em;
+      font-size: 9.5px;
+      color: var(--t3);
+      letter-spacing: 0.04em;
     }
-    .blocker-warn { color: rgba(248,113,113,0.75); }
+    .issues-blocker { color: rgba(248,113,113,0.72); }
 
-    /* ── ISSUE CARD ─────────────────────────────────────── */
+    /* ── ISSUE CARD ───────────────────────────── */
     .issue-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 14px 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 9px;
+      border: 1px solid var(--b);
+      background: var(--s1);
+      overflow: hidden;
       opacity: 0;
       animation: fadeUp 0.35s ease forwards;
+      transition: border-color 0.2s, background 0.2s;
     }
+    .issue-card:hover { border-color: var(--bh); background: var(--s2); }
+    .issue-card.answered { border-color: rgba(74,222,128,0.18); }
 
-    .issue-card.answered { border-color: rgba(74,222,128,0.14); }
-    .issue-card.cat-critical  { border-left: 2px solid rgba(248,113,113,0.45); }
-    .issue-card.cat-assumption{ border-left: 2px solid rgba(245,158,11,0.45); }
-    .issue-card.cat-edge      { border-left: 2px solid rgba(251,146,60,0.45); }
-    .issue-card.cat-arch      { border-left: 2px solid rgba(96,165,250,0.45); }
+    .issue-stripe { height: 2.5px; width: 100%; }
+    .stripe-critical   { background: linear-gradient(90deg, var(--red)   60%, transparent); }
+    .stripe-assumption { background: linear-gradient(90deg, var(--amber) 60%, transparent); }
+    .stripe-edge       { background: linear-gradient(90deg, var(--orn)   60%, transparent); }
+    .stripe-arch       { background: linear-gradient(90deg, var(--blu)   60%, transparent); }
 
-    .issue-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+    .issue-inner { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+    .issue-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
     .issue-badges { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
 
     .badge {
       font-family: var(--mono);
       font-size: 8.5px;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+      font-weight: 500;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
-      padding: 2px 6px;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
+      padding: 2px 7px;
     }
-    .b-critical   { color: var(--red);    background: var(--red-dim); }
-    .b-assumption { color: var(--amber);  background: var(--amber-dim); }
-    .b-edge       { color: var(--orange); background: var(--orange-dim); }
-    .b-arch       { color: var(--blue);   background: var(--blue-dim); }
-    .b-blocker    { color: var(--red);    background: var(--red-dim); }
-    .b-major      { color: var(--orange); background: var(--orange-dim); }
-    .b-minor      { color: var(--text-3); background: rgba(255,255,255,0.05); }
-    .b-answered   { color: var(--green);  background: var(--green-dim); }
+    .b-critical   { color: var(--red);   background: var(--rd10); }
+    .b-assumption { color: var(--amber); background: var(--am08); }
+    .b-edge       { color: var(--orn);   background: var(--or10); }
+    .b-arch       { color: var(--blu);   background: var(--bl10); }
+    .b-blocker    { color: var(--red);   background: var(--rd10); }
+    .b-major      { color: var(--orn);   background: var(--or10); }
+    .b-minor      { color: var(--t3);    background: rgba(255,255,255,0.05); }
+    .b-ok         { color: var(--grn);   background: var(--gn10); }
 
-    .issue-num { font-family: var(--mono); font-size: 9px; color: var(--text-3); flex-shrink: 0; }
+    .issue-num { font-family: var(--mono); font-size: 9px; color: var(--t4); flex-shrink: 0; }
 
-    .issue-title {
-      font-family: var(--serif);
-      font-size: 15px;
-      color: var(--text);
-      line-height: 1.3;
-    }
-    .issue-desc { font-size: 12px; color: var(--text-3); line-height: 1.65; }
+    .issue-title { font-family: var(--syne); font-size: 15px; font-weight: 700; color: var(--t1); line-height: 1.25; letter-spacing: -0.01em; }
+
+    .issue-desc { font-size: 12.5px; color: var(--t3); line-height: 1.65; }
+
     .issue-q {
-      background: rgba(245,158,11,0.04);
-      border-left: 2px solid rgba(245,158,11,0.22);
-      padding: 8px 10px;
-      font-size: 11.5px;
+      background: rgba(245,158,11,0.05);
+      border-left: 2px solid rgba(245,158,11,0.25);
+      padding: 9px 12px;
+      font-size: 12.5px;
       color: rgba(245,158,11,0.72);
       line-height: 1.55;
     }
@@ -521,892 +586,786 @@
     .issue-textarea {
       width: 100%;
       min-height: 64px;
-      padding: 8px 10px;
-      font-family: var(--mono);
-      font-size: 11px;
-      line-height: 1.65;
-      resize: vertical;
-    }
-
-    /* ── SUGGESTIONS ────────────────────────────────────── */
-    .suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      animation: fadeUp 0.25s ease forwards;
-    }
-
-    .suggestion-pill {
-      position: relative;
-      font-family: var(--mono);
-      font-size: 9.5px;
-      letter-spacing: 0.04em;
-      color: rgba(245,158,11,0.82);
-      background: var(--amber-dim);
-      border: 1px solid rgba(245,158,11,0.2);
-      padding: 5px 10px;
-      cursor: pointer;
-      transition: background 0.15s, border-color 0.15s;
-    }
-    .suggestion-pill:hover { background: rgba(245,158,11,0.18); border-color: rgba(245,158,11,0.38); }
-
-    .pill-tooltip {
-      display: none;
-      position: absolute;
-      bottom: calc(100% + 6px);
-      left: 0;
-      min-width: 220px;
-      max-width: 280px;
-      background: #13131a;
-      border: 1px solid rgba(255,255,255,0.1);
       padding: 9px 11px;
       font-family: var(--mono);
-      font-size: 10px;
-      line-height: 1.55;
-      color: var(--text-2);
-      z-index: 50;
-      pointer-events: none;
-      white-space: normal;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+      font-size: 11.5px;
+      line-height: 1.7;
+      color: var(--t1);
+      background: rgba(255,255,255,0.025);
+      border: 1px solid var(--b);
+      outline: none;
+      resize: vertical;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .suggestion-pill:hover .pill-tooltip { display: block; }
+    .issue-textarea:focus { border-color: rgba(245,158,11,0.38); box-shadow: 0 0 0 1px rgba(245,158,11,0.08); }
+    .issue-textarea::placeholder { color: var(--t4); font-style: italic; }
 
-    /* ── LOADING ────────────────────────────────────────── */
-    .loading-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-left: 2px solid var(--amber-border);
-      padding: 13px 15px;
-      display: flex;
+    .suggest-btn {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--t3);
+      background: transparent;
+      border: 1px solid var(--b);
+      padding: 6px 12px;
+      cursor: pointer;
+      display: inline-flex;
       align-items: center;
-      gap: 10px;
-      animation: fadeUp 0.2s ease forwards;
+      gap: 6px;
+      transition: all 0.15s;
     }
-    .spinner {
-      width: 14px;
-      height: 14px;
-      border: 1.5px solid rgba(245,158,11,0.2);
-      border-top-color: var(--amber);
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      flex-shrink: 0;
-    }
-    .loading-text { font-size: 12px; color: var(--text-2); }
+    .suggest-btn:hover:not(:disabled) { border-color: rgba(245,158,11,0.3); color: rgba(245,158,11,0.8); }
+    .suggest-btn:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* ── REVISE BAR ─────────────────────────────────────── */
+    /* ── SUGGESTION PILLS ─────────────────────── */
+    .suggestions { display: flex; flex-wrap: wrap; gap: 7px; animation: fadeIn 0.25s ease forwards; }
+
+    .s-pill {
+      position: relative;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(245,158,11,0.8);
+      background: var(--am08);
+      border: 1px solid rgba(245,158,11,0.18);
+      padding: 5px 11px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .s-pill:hover { background: rgba(245,158,11,0.16); border-color: rgba(245,158,11,0.38); }
+
+    .s-tooltip {
+      display: none;
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 0;
+      width: 260px;
+      background: #12121e;
+      border: 1px solid var(--bh);
+      padding: 10px 12px;
+      font-family: var(--mono);
+      font-size: 10.5px;
+      line-height: 1.55;
+      color: var(--t2);
+      z-index: 100;
+      pointer-events: none;
+      box-shadow: 0 16px 48px rgba(0,0,0,0.65);
+      white-space: normal;
+    }
+    .s-pill:hover .s-tooltip { display: block; }
+
+    /* ── REVISE BAR ───────────────────────────── */
     .revise-bar {
       position: sticky;
       bottom: 0;
-      padding-top: 20px;
-      background: linear-gradient(to top, rgba(7,7,10,1) 55%, transparent);
-      margin-top: 6px;
+      padding-top: 18px;
+      background: linear-gradient(to top, #06060c 50%, transparent);
     }
+
     .revise-btn {
       width: 100%;
-      font-family: var(--mono);
-      font-size: 10px;
+      font-family: var(--sans);
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #08080c;
+      letter-spacing: -0.01em;
+      color: #05050a;
       background: var(--amber);
       border: none;
-      padding: 12px;
+      padding: 14px;
       cursor: pointer;
-      transition: background 0.15s, box-shadow 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.15s;
     }
-    .revise-btn:hover:not(:disabled) {
-      background: #fbbf24;
-      box-shadow: 0 4px 20px rgba(245,158,11,0.28);
-    }
-    .revise-btn:disabled { opacity: 0.28; cursor: not-allowed; }
+    .revise-btn:hover:not(:disabled) { background: #fbbf24; box-shadow: 0 6px 28px rgba(245,158,11,0.3); }
+    .revise-btn:disabled { opacity: 0.22; cursor: not-allowed; }
 
-    .revise-hint {
-      text-align: center;
-      margin-top: 7px;
-      font-family: var(--mono);
-      font-size: 9px;
-      color: var(--text-3);
-      letter-spacing: 0.04em;
-    }
+    .revise-hint { text-align: center; margin-top: 8px; font-family: var(--mono); font-size: 9.5px; color: var(--t3); }
 
-    /* ── ACTIVITY ───────────────────────────────────────── */
+    /* ── ACTIVITY ─────────────────────────────── */
+    .activity-lbl { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--t4); margin-bottom: 6px; }
+
     .activity-entry {
       display: flex;
-      gap: 8px;
+      gap: 9px;
       padding: 7px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.04);
-      font-size: 11.5px;
-      color: var(--text-3);
-      line-height: 1.55;
-      animation: fadeUp 0.2s ease forwards;
+      border-bottom: 1px solid rgba(255,255,255,0.035);
+      font-size: 12px;
+      color: var(--t3);
+      line-height: 1.5;
     }
-    .activity-icon { flex-shrink: 0; font-size: 11px; }
 
-    /* ── ERROR BANNER ───────────────────────────────────── */
-    .error-banner {
-      background: var(--red-dim);
+    /* ── ERROR ────────────────────────────────── */
+    .err-banner {
+      background: var(--rd10);
       border: 1px solid rgba(248,113,113,0.22);
-      padding: 10px 14px;
+      padding: 11px 15px;
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
       gap: 12px;
-      font-size: 12px;
+      font-size: 12.5px;
       color: rgba(248,113,113,0.85);
       animation: fadeUp 0.2s ease forwards;
     }
-    .error-dismiss {
-      background: none;
-      border: none;
-      color: rgba(248,113,113,0.5);
-      cursor: pointer;
-      font-size: 18px;
-      line-height: 1;
-      flex-shrink: 0;
-    }
+    .err-x { background: none; border: none; color: rgba(248,113,113,0.4); cursor: pointer; font-size: 20px; line-height: 1; flex-shrink: 0; padding: 0; transition: color 0.15s; }
+    .err-x:hover { color: rgba(248,113,113,0.8); }
 
-    /* ── COMPLETE SCREEN ────────────────────────────────── */
-    .screen-complete {
-      flex: 1;
-      display: grid;
-      grid-template-columns: 1fr 380px;
-      overflow: hidden;
-    }
+    /* ── COMPLETE SCREEN ──────────────────────── */
+    .screen-complete { flex: 1; display: grid; grid-template-columns: 1fr 400px; overflow: hidden; }
 
-    .result-sidebar {
-      border-left: 1px solid var(--border);
+    .complete-sidebar {
+      border-left: 1px solid var(--b);
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      padding: 20px;
+      gap: 14px;
+      padding: 22px;
     }
 
     .pass-card {
-      border: 1px solid var(--border);
-      padding: 24px;
+      padding: 30px 24px;
       text-align: center;
-      animation: fadeUp 0.4s ease forwards;
+      border: 1px solid var(--b);
+      animation: scale-in 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
     }
-    .pass-card.pass-state {
-      border-color: rgba(74,222,128,0.2);
-      background: rgba(74,222,128,0.04);
-      animation: greenPulse 2.5s ease-in-out infinite, fadeUp 0.4s ease forwards;
+    .pass-card.is-pass {
+      border-color: rgba(74,222,128,0.22);
+      background: rgba(74,222,128,0.03);
+      animation: scale-in 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards, glow-g 2.5s ease-in-out 0.5s infinite;
     }
-    .pass-card.warn-state {
-      border-color: var(--amber-border);
-      background: var(--amber-dim);
-    }
+    .pass-card.is-warn { border-color: var(--am30); background: var(--am08); }
 
-    .pass-title {
-      font-family: var(--serif);
-      font-size: 42px;
-      letter-spacing: 0.04em;
-      margin-bottom: 8px;
+    .pass-icon {
+      font-family: var(--syne);
+      font-size: 56px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      display: block;
+      line-height: 1;
+      margin-bottom: 14px;
     }
-    .pass-title.pass-state { color: var(--green); }
-    .pass-title.warn-state { color: var(--amber); }
+    .pass-icon.is-pass { color: var(--grn); }
+    .pass-icon.is-warn { color: var(--amber); }
 
-    .pass-sub { font-size: 12.5px; color: var(--text-2); line-height: 1.6; }
-    .pass-reason { font-size: 11.5px; color: var(--text-3); line-height: 1.65; margin-top: 12px; text-align: left; }
+    .pass-tag { font-family: var(--mono); font-size: 9px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--t3); margin-bottom: 8px; }
+    .pass-sub { font-size: 13px; color: var(--t2); line-height: 1.6; }
+    .pass-reason { margin-top: 14px; font-size: 12px; color: var(--t3); line-height: 1.65; text-align: left; }
+
+    .info-card {
+      background: var(--s1);
+      border: 1px solid var(--b);
+      padding: 16px 16px;
+      opacity: 0;
+      animation: fadeUp 0.35s ease 0.2s forwards;
+    }
+    .info-hd { font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--t3); margin-bottom: 8px; }
+    .info-body { font-size: 12.5px; color: var(--t2); line-height: 1.65; }
 
     .copy-btn {
-      font-family: var(--mono);
-      font-size: 9px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-2);
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 6px 12px;
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--t2);
+      background: var(--s1);
+      border: 1px solid var(--b);
+      padding: 7px 14px;
       cursor: pointer;
       transition: all 0.15s;
     }
-    .copy-btn:hover { border-color: rgba(255,255,255,0.15); color: var(--text); }
-    .copy-btn.copied { border-color: rgba(74,222,128,0.3); color: var(--green); }
+    .copy-btn:hover { background: var(--s2); border-color: var(--bh); color: var(--t1); }
+    .copy-btn.ok { border-color: rgba(74,222,128,0.3); color: var(--grn); }
 
-    .comprehension-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      padding: 14px 15px;
-      opacity: 0;
-      animation: fadeUp 0.35s ease 0.1s forwards;
-    }
-    .section-label {
-      font-family: var(--mono);
-      font-size: 8.5px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-3);
-      margin-bottom: 7px;
-    }
-
-    .empty-doc {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex: 1;
-      font-family: var(--mono);
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      color: var(--text-3);
-    }
-
-    /* ── MAX REACHED ────────────────────────────────────── */
-    .max-banner {
-      background: var(--amber-dim);
-      border: 1px solid var(--amber-border);
-      padding: 10px 14px;
-      font-size: 11.5px;
-      color: rgba(245,158,11,0.75);
-      line-height: 1.55;
-    }
-
-    /* ── MOBILE ─────────────────────────────────────────── */
+    /* ── MOBILE ───────────────────────────────── */
     @media (max-width: 768px) {
-      #root { overflow: auto; }
-
-      .header { padding: 0 14px; gap: 10px; }
-      .header-center { display: none; }
+      .pipeline { display: none; }
       .logo-tag { display: none; }
-      .logo-name { font-size: 15px; }
-
-      .screen-input { padding: 32px 16px; gap: 28px; }
-      .hero h2 { font-size: 26px; }
-
-      .screen-work {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto 1fr;
-        overflow: auto;
-        height: auto;
-        min-height: 0;
-      }
-
-      .panel-left {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-        max-height: 45vh;
-        overflow-y: auto;
-      }
-
-      .panel-right { padding: 16px; }
-
-      .screen-complete {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
-        overflow: auto;
-        height: auto;
-      }
-
-      .result-sidebar {
-        border-left: none;
-        border-top: 1px solid var(--border);
-      }
-
-      .revise-bar { position: relative; padding-top: 12px; background: none; }
+      .hdr { padding: 0 16px; }
+      .screen-input { padding: 36px 16px; }
+      .input-h1 { font-size: 30px; }
+      .input-sub { font-size: 14px; margin-bottom: 32px; }
+      .summary-cols { grid-template-columns: 1fr; }
+      #root { overflow: auto; }
+      .screen-work { grid-template-columns: 1fr; grid-template-rows: auto 1fr; overflow: auto; height: auto; }
+      .panel-l { border-right: none; border-bottom: 1px solid var(--b); max-height: 45vh; }
+      .panel-r { height: auto; }
+      .panel-r-scroll { overflow: visible; }
+      .screen-complete { grid-template-columns: 1fr; overflow: auto; height: auto; }
+      .complete-sidebar { border-left: none; border-top: 1px solid var(--b); }
+      .revise-bar { position: relative; background: none; padding-top: 12px; }
+      .input-row { flex-direction: column; align-items: stretch; }
+      .input-row .btn-amber, .input-row .btn-glass { width: 100%; }
     }
   </style>
 </head>
 <body>
 <div id="root"></div>
-
 <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script>
 const { useState, useEffect, useRef, useCallback, useMemo } = React;
 
-// ── Constants ────────────────────────────────────────────
-const S = {
-  INPUT:      'input',
-  ELEPHANT:   'elephant_analyzing',
-  QA:         'user_qa',
-  REVISING:   'revising',
-  GOLDFISH:   'goldfish_testing',
-  COMPLETE:   'complete',
-  MAX:        'max_reached',
-};
-
+// ── Stage constants ──────────────────────────
+const S = { INPUT:'input', ELEPHANT:'elephant', QA:'qa', REVISING:'revising', GOLDFISH:'goldfish', COMPLETE:'complete', MAX:'max' };
 const PIPELINE = [
-  { id: S.INPUT,    label: 'Input' },
-  { id: S.ELEPHANT, label: 'Elephant' },
-  { id: S.QA,       label: 'Q&A' },
-  { id: S.REVISING, label: 'Revision' },
-  { id: S.GOLDFISH, label: 'Goldfish' },
-  { id: S.COMPLETE, label: 'Complete' },
+  { id:S.INPUT, label:'Input' }, { id:S.ELEPHANT, label:'Elephant' }, { id:S.QA, label:'Q&A' },
+  { id:S.REVISING, label:'Revise' }, { id:S.GOLDFISH, label:'Goldfish' }, { id:S.COMPLETE, label:'Complete' },
 ];
-
 const ORDER = [S.INPUT, S.ELEPHANT, S.QA, S.REVISING, S.GOLDFISH, S.COMPLETE];
 
 const CAT = {
-  CRITICAL_GAP:          { cls: 'cat-critical',   bCls: 'b-critical',   label: '🔴 Critical',     },
-  WEAK_ASSUMPTION:       { cls: 'cat-assumption',  bCls: 'b-assumption', label: '🟡 Assumption',   },
-  MISSING_EDGE_CASE:     { cls: 'cat-edge',        bCls: 'b-edge',       label: '🟠 Edge Case',    },
-  ARCHITECTURE_QUESTION: { cls: 'cat-arch',        bCls: 'b-arch',       label: '🔵 Architecture', },
+  CRITICAL_GAP:          { stripe:'stripe-critical',   cb:'b-critical',   label:'🔴 Critical Gap'  },
+  WEAK_ASSUMPTION:       { stripe:'stripe-assumption',  cb:'b-assumption', label:'🟡 Assumption'    },
+  MISSING_EDGE_CASE:     { stripe:'stripe-edge',        cb:'b-edge',       label:'🟠 Edge Case'     },
+  ARCHITECTURE_QUESTION: { stripe:'stripe-arch',        cb:'b-arch',       label:'🔵 Architecture'  },
 };
+const SEV = { BLOCKER:{cls:'b-blocker',l:'Blocker'}, MAJOR:{cls:'b-major',l:'Major'}, MINOR:{cls:'b-minor',l:'Minor'} };
 
-const SEV = {
-  BLOCKER: { cls: 'b-blocker', label: 'BLOCKER' },
-  MAJOR:   { cls: 'b-major',   label: 'MAJOR'   },
-  MINOR:   { cls: 'b-minor',   label: 'MINOR'   },
-};
-
-// ── OpenAI ───────────────────────────────────────────────
-async function callAI(system, user, maxTokens = 4000) {
-  const res = await fetch('/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      model: 'gpt-4o',
-      max_tokens: maxTokens,
-      messages: [{ role: 'system', content: system }, { role: 'user', content: user }],
-    }),
+// ── API ──────────────────────────────────────
+async function callAI(sys, usr, max=4000) {
+  const r = await fetch('/api/chat', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ model:'gpt-4o', max_tokens:max, messages:[{role:'system',content:sys},{role:'user',content:usr}] }),
   });
-  if (!res.ok) {
-    const e = await res.json().catch(() => ({}));
-    throw new Error(e.error?.message || `API error ${res.status}`);
-  }
-  const d = await res.json();
+  if (!r.ok) { const e=await r.json().catch(()=>({})); throw new Error(e.error?.message||`API error ${r.status}`); }
+  const d = await r.json();
   return d.choices[0].message.content;
 }
+const parseJ = t => JSON.parse(t.replace(/```json|```/g,'').trim());
 
-function parseJSON(t) {
-  return JSON.parse(t.replace(/```json|```/g, '').trim());
-}
-
-// ── Prompts ──────────────────────────────────────────────
+// ── Prompts ──────────────────────────────────
 const P = {
-  elephantSystem: `You are a principal-level software architect and the world's most rigorous technical design reviewer. You have decades of experience shipping large-scale systems. You are the Elephant — you hold all context, ask the hardest questions, and your singular mission is to make this design document bulletproof before a single line of code is written.
+  sumSys: `You are a sharp technical analyst. You read design documents and produce structured, honest summaries. Be concise and direct.`,
+  sumUsr: doc => `Summarize this design document:
 
-You are brutal, thorough, and precise. Vagueness is a bug. Ambiguity is a bug. Missing edge cases are bugs. Unstated assumptions are bugs. You do not flatter. You do not hedge.
-
-CRITICAL OUTPUT RULE: You must output ONLY valid JSON. No markdown. No preamble. No explanation outside the JSON structure.`,
-
-  elephantUser: doc => `Analyze this design document with maximum rigor:
-
-<design_doc>
-${doc}
-</design_doc>
-
-Return ONLY this JSON structure — no other text:
-
-{
-  "summary": "2-3 sentence honest assessment of the doc's current state",
-  "issues": [
-    {
-      "id": "unique_id",
-      "category": "CRITICAL_GAP" | "WEAK_ASSUMPTION" | "MISSING_EDGE_CASE" | "ARCHITECTURE_QUESTION",
-      "title": "Short title of the issue (max 8 words)",
-      "description": "Precise description of the problem. Quote the problematic section if applicable. Explain exactly what's missing and why it would cause implementation failure or ambiguity.",
-      "question": "The specific question the implementer needs answered to resolve this issue. Make it concrete and actionable.",
-      "severity": "BLOCKER" | "MAJOR" | "MINOR"
-    }
-  ]
-}
-
-Be exhaustive. A doc with 500 words should have at least 8-15 issues. A doc with 2000+ words should have 15-25 issues.`,
-
-  suggestSystem: `You are a senior software architect helping a developer make concrete decisions about their system design. You give direct, opinionated, practical answers. You don't ask clarifying questions — you make reasonable assumptions and state them.`,
-
-  suggestUser: (issue, excerpt) => `A developer is designing a system and encountered this specific issue in their design document:
-
-ISSUE: ${issue.title}
-QUESTION: ${issue.question}
-CONTEXT FROM DOC: ${excerpt}
-
-Generate exactly 3 concrete answer options they could use. Each should be a complete, ready-to-paste answer — not a question or a vague direction. Cover different valid approaches.
-
-Return ONLY this JSON — no other text:
-{
-  "suggestions": [
-    { "label": "Short label (3-5 words)", "answer": "Full concrete answer. 2-4 sentences." },
-    { "label": "Short label (3-5 words)", "answer": "Full concrete answer." },
-    { "label": "Short label (3-5 words)", "answer": "Full concrete answer." }
-  ]
-}`,
-
-  revisionSystem: `You are a principal engineer and technical writer. You rewrite design documents to be precise, complete, and implementation-ready. You incorporate human decisions faithfully and fill remaining gaps with well-reasoned, explicitly-stated defaults. You write for engineers who need zero ambiguity.`,
-
-  revisionUser: (doc, ia) => `Here is the current design document:
-
-<design_doc>
-${doc}
-</design_doc>
-
-Here are the issues that were identified and the human's answers to each:
-
-<resolved_issues>
-${ia}
-</resolved_issues>
-
-Rewrite the complete design document incorporating every answer above. Rules:
-1. Every answered question must be woven into the appropriate sections — not a Q&A appendix
-2. State all assumptions explicitly with an "Assumptions" section
-3. Add an "Error Handling & Edge Cases" section covering every edge case raised
-4. Add an "Open Questions" section for any MINOR issues left blank (omit if everything was answered)
-5. The document must be written so that an engineer with no prior context can implement the system without asking a single clarifying question
-6. Use clear markdown formatting
-
-Output ONLY the revised markdown document. No preamble, no explanation.`,
-
-  goldfishSystem: `You are a brand new engineer who just joined a team. You have been handed a design document. You have zero prior context — no meetings, no Slack, no conversations. You are the Goldfish. You are rigorous, literal, and unforgiving of ambiguity. Your only input is this document.
-
-CRITICAL OUTPUT RULE: Return ONLY valid JSON. No markdown. No preamble.`,
-
-  goldfishUser: doc => `You have been handed this design document with absolutely no other context:
-
-<design_doc>
-${doc}
-</design_doc>
-
-Perform a Goldfish Test. Answer everything from the document alone. If you cannot answer something definitively from the document, it is a FAILURE.
+<doc>${doc}</doc>
 
 Return ONLY this JSON:
 {
-  "system_comprehension": "3-4 sentence description of what this system does, who uses it, and why it exists — based ONLY on the doc",
-  "can_implement": true | false,
-  "verdict": "PASS" | "FAIL",
-  "pass_reason": "If PASS: one paragraph explaining why this doc is genuinely implementation-ready",
-  "failures": [
-    {
-      "id": "unique_id",
-      "category": "CRITICAL_GAP" | "WEAK_ASSUMPTION" | "MISSING_EDGE_CASE" | "ARCHITECTURE_QUESTION",
-      "title": "Short title of the gap",
-      "description": "Exact description of what's missing or ambiguous",
-      "question": "The specific question that must be answered before this doc passes",
-      "severity": "BLOCKER" | "MAJOR"
-    }
-  ]
-}
+  "title": "3-6 word title of what's being designed",
+  "what": "One clear sentence — what system or feature this doc describes",
+  "scope": ["Key area 1", "Key area 2", "Key area 3"],
+  "decisions": ["Decision already made 1", "Decision 2"],
+  "gaps": ["Obvious gap 1", "Gap 2"]
+}`,
 
-VERDICT RULES:
-- PASS: Zero BLOCKER failures.
-- FAIL: One or more BLOCKER failures exist.
-If verdict is PASS, failures array must be empty.
-If verdict is FAIL, failures array must contain ONLY BLOCKER-level issues.`,
+  eleSys: `You are a principal-level software architect and the world's most rigorous technical design reviewer. You are the Elephant — you hold all context, ask the hardest questions, and your singular mission is to make this design document bulletproof before a single line of code is written.
+
+You are brutal, thorough, and precise. Vagueness is a bug. Ambiguity is a bug. Missing edge cases are bugs. Unstated assumptions are bugs. You do not flatter. You do not hedge.
+
+CRITICAL OUTPUT RULE: Output ONLY valid JSON. No markdown. No preamble.`,
+  eleUsr: doc => `Analyze this design document with maximum rigor:
+
+<design_doc>${doc}</design_doc>
+
+Return ONLY this JSON:
+{
+  "summary": "2-3 sentence honest assessment of the doc's current state",
+  "issues": [{
+    "id": "unique_id",
+    "category": "CRITICAL_GAP"|"WEAK_ASSUMPTION"|"MISSING_EDGE_CASE"|"ARCHITECTURE_QUESTION",
+    "title": "Short title (max 8 words)",
+    "description": "Precise description of the problem and why it causes implementation failure.",
+    "question": "The specific concrete question the implementer needs answered.",
+    "severity": "BLOCKER"|"MAJOR"|"MINOR"
+  }]
+}
+Be exhaustive. 500-word doc = 8-15 issues. 2000+ words = 15-25 issues.`,
+
+  sugSys: `You are a senior software architect giving direct, opinionated, practical answers. You don't ask questions — you make reasonable assumptions and state them.`,
+  sugUsr: (issue, ctx) => `Design system issue encountered:
+ISSUE: ${issue.title}
+QUESTION: ${issue.question}
+CONTEXT: ${ctx}
+
+Generate exactly 3 concrete answer options. Each must be a complete, ready-to-paste answer.
+
+Return ONLY this JSON:
+{
+  "suggestions": [
+    {"label":"3-5 word label","answer":"Full concrete answer. 2-4 sentences."},
+    {"label":"3-5 word label","answer":"Full concrete answer."},
+    {"label":"3-5 word label","answer":"Full concrete answer."}
+  ]
+}`,
+
+  revSys: `You are a principal engineer and technical writer. You rewrite design documents to be precise, complete, and implementation-ready. You incorporate human decisions faithfully. You write for engineers who need zero ambiguity.`,
+  revUsr: (doc, ia) => `Current design document:
+<design_doc>${doc}</design_doc>
+
+Issues and human answers:
+<resolved_issues>${ia}</resolved_issues>
+
+Rewrite the complete document incorporating every answer. Rules:
+1. Weave answers into appropriate sections (not a Q&A appendix)
+2. Add explicit "Assumptions" section
+3. Add "Error Handling & Edge Cases" section
+4. Add "Open Questions" only if some MINOR issues were left blank
+5. An engineer with zero prior context must be able to implement from this doc alone
+6. Use clear markdown formatting
+
+Output ONLY the revised markdown. No preamble.`,
+
+  golSys: `You are a brand new engineer who just joined the team. You have zero prior context — no meetings, no Slack, no conversations. You are the Goldfish. You are rigorous, literal, and unforgiving of ambiguity. Your only input is this document.
+
+CRITICAL OUTPUT RULE: Return ONLY valid JSON. No markdown. No preamble.`,
+  golUsr: doc => `You have been handed this design document with absolutely no other context:
+
+<design_doc>${doc}</design_doc>
+
+Perform a Goldfish Test. If you cannot answer something definitively from the document, it is a FAILURE.
+
+Return ONLY this JSON:
+{
+  "system_comprehension": "3-4 sentences on what this system does, who uses it, why it exists — from the doc alone",
+  "can_implement": true|false,
+  "verdict": "PASS"|"FAIL",
+  "pass_reason": "If PASS: one paragraph on why this doc is implementation-ready",
+  "failures": [{"id":"uid","category":"CRITICAL_GAP"|"WEAK_ASSUMPTION"|"MISSING_EDGE_CASE"|"ARCHITECTURE_QUESTION","title":"Short title","description":"What's missing","question":"Specific question to answer","severity":"BLOCKER"|"MAJOR"}]
+}
+PASS = zero BLOCKER failures. FAIL = one or more BLOCKERs. If PASS, failures must be empty.`,
 };
 
-// ── Markdown renderer ────────────────────────────────────
-function mdToHtml(text) {
-  if (!text) return '';
-  let h = text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  h = h.replace(/```[\w]*\n?([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
-  h = h.replace(/`([^`]+)`/g, '<code>$1</code>');
-  h = h.replace(/^---+$/gm, '<hr/>');
-  h = h.replace(/^### (.+)$/gm, '<h3>$1</h3>');
-  h = h.replace(/^## (.+)$/gm, '<h2>$1</h2>');
-  h = h.replace(/^# (.+)$/gm, '<h1>$1</h1>');
-  h = h.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
-  h = h.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
-  h = h.replace(/\*([^*]+)\*/g, '<em>$1</em>');
-  h = h.replace(/^\s*[-*] (.+)$/gm, '<li>$1</li>');
-  h = h.replace(/(<li>[^<]*<\/li>\n?)+/g, m => `<ul>${m}</ul>`);
-  h = h.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
-  const lines = h.split('\n');
-  const out = [];
-  for (const ln of lines) {
-    const t = ln.trim();
-    if (!t) { out.push(''); continue; }
-    if (/^<(h[123]|ul|li|pre|hr|blockquote)/.test(t)) { out.push(t); }
-    else { out.push(`<p>${t}</p>`); }
-  }
-  return out.join('\n');
+// ── Markdown ─────────────────────────────────
+function md(t) {
+  if (!t) return '';
+  let h = t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  h = h.replace(/```[\w]*\n?([\s\S]*?)```/g,'<pre><code>$1</code></pre>');
+  h = h.replace(/`([^`]+)`/g,'<code>$1</code>');
+  h = h.replace(/^---+$/gm,'<hr/>');
+  h = h.replace(/^### (.+)$/gm,'<h3>$1</h3>');
+  h = h.replace(/^## (.+)$/gm,'<h2>$1</h2>');
+  h = h.replace(/^# (.+)$/gm,'<h1>$1</h1>');
+  h = h.replace(/^&gt; (.+)$/gm,'<blockquote>$1</blockquote>');
+  h = h.replace(/\*\*([^*]+)\*\*/g,'<strong>$1</strong>');
+  h = h.replace(/\*([^*]+)\*/g,'<em>$1</em>');
+  h = h.replace(/^\s*[-*] (.+)$/gm,'<li>$1</li>');
+  h = h.replace(/(<li>[^<]*<\/li>\n?)+/g,m=>`<ul>${m}</ul>`);
+  h = h.replace(/^\d+\. (.+)$/gm,'<li>$1</li>');
+  return h.split('\n').map(l=>{
+    const t=l.trim();
+    if(!t) return '';
+    if(/^<(h[123]|ul|li|pre|hr|blockquote)/.test(t)) return t;
+    return `<p>${t}</p>`;
+  }).join('\n');
 }
 
-// ── Elapsed Timer ────────────────────────────────────────
-function ElapsedTimer({ running }) {
-  const [s, setS] = useState(0);
-  const t0 = useRef(null);
-  const raf = useRef(null);
-  useEffect(() => {
-    if (running) {
-      t0.current = Date.now();
-      const tick = () => { setS(Math.floor((Date.now() - t0.current) / 1000)); raf.current = requestAnimationFrame(tick); };
-      raf.current = requestAnimationFrame(tick);
-    } else { cancelAnimationFrame(raf.current); setS(0); }
-    return () => cancelAnimationFrame(raf.current);
-  }, [running]);
-  if (!running) return null;
-  const m = Math.floor(s / 60), sec = s % 60;
-  return React.createElement('span', { className: 'elapsed-timer' }, `${m}:${String(sec).padStart(2,'0')}`);
+// ── Timer ────────────────────────────────────
+function Timer({on}) {
+  const [s,setS]=useState(0); const t0=useRef(null); const raf=useRef(null);
+  useEffect(()=>{
+    if(on){ t0.current=Date.now(); const tick=()=>{ setS(Math.floor((Date.now()-t0.current)/1000)); raf.current=requestAnimationFrame(tick); }; raf.current=requestAnimationFrame(tick); }
+    else { cancelAnimationFrame(raf.current); setS(0); }
+    return ()=>cancelAnimationFrame(raf.current);
+  },[on]);
+  if(!on) return null;
+  const m=Math.floor(s/60), sec=s%60;
+  return React.createElement('span',{className:'hdr-elapsed'},`${m}:${String(sec).padStart(2,'0')}`);
 }
 
-// ── Pipeline Tracker ─────────────────────────────────────
-function PipelineTracker({ stage }) {
-  const idx = ORDER.indexOf(stage);
-  return React.createElement('div', { className: 'header-center' },
-    PIPELINE.map((step, i) => {
-      const si = ORDER.indexOf(step.id);
-      const active = step.id === stage || (stage === S.MAX && step.id === S.COMPLETE);
-      const done = si < idx;
-      return React.createElement(React.Fragment, { key: step.id },
-        React.createElement('div', { className: `pipeline-step ${active ? 'active' : ''} ${done ? 'done' : ''}` },
-          React.createElement('div', { className: 'pipeline-node' }),
-          step.label,
-        ),
-        i < PIPELINE.length - 1 && React.createElement('div', { className: `pipeline-line ${done ? 'done' : ''}` }),
+// ── Pipeline ─────────────────────────────────
+function Pipeline({stage}) {
+  const idx=ORDER.indexOf(stage);
+  return React.createElement('div',{className:'pipeline'},
+    PIPELINE.map((step,i)=>{
+      const si=ORDER.indexOf(step.id);
+      const active=step.id===stage||(stage===S.MAX&&step.id===S.COMPLETE);
+      const done=si<idx;
+      return React.createElement(React.Fragment,{key:step.id},
+        React.createElement('div',{className:`pip-step${active?' active':''}${done?' done':''}`},
+          React.createElement('div',{className:'pip-dot'}), step.label),
+        i<PIPELINE.length-1&&React.createElement('div',{className:`pip-line${done?' done':''}`}),
       );
     })
   );
 }
 
-// ── Issue Card ───────────────────────────────────────────
-function IssueCard({ issue, index, onAnswer, onSuggest }) {
-  const [local, setLocal] = useState(issue.userAnswer || '');
-  const taRef = useRef(null);
-  useEffect(() => setLocal(issue.userAnswer || ''), [issue.userAnswer]);
-
-  const onChange = e => { setLocal(e.target.value); onAnswer(issue.id, e.target.value); };
-  const onPill = ans => { setLocal(ans); onAnswer(issue.id, ans); taRef.current?.focus(); };
-
-  const cat = CAT[issue.category] || CAT.CRITICAL_GAP;
-  const sev = SEV[issue.severity] || SEV.MINOR;
-  const answered = local.trim().length > 0;
-
-  return React.createElement('div', {
-    className: `issue-card ${cat.cls} ${answered ? 'answered' : ''}`,
-    style: { animationDelay: `${Math.min(index, 10) * 40}ms` },
+// ── Issue Card ───────────────────────────────
+function IssueCard({issue, idx, onAnswer, onSuggest}) {
+  const [local,setLocal]=useState(issue.userAnswer||'');
+  const ta=useRef(null);
+  useEffect(()=>setLocal(issue.userAnswer||''),[issue.userAnswer]);
+  const onChange=e=>{ setLocal(e.target.value); onAnswer(issue.id,e.target.value); };
+  const onPill=a=>{ setLocal(a); onAnswer(issue.id,a); ta.current?.focus(); };
+  const cat=CAT[issue.category]||CAT.CRITICAL_GAP;
+  const sev=SEV[issue.severity]||SEV.MINOR;
+  const answered=local.trim().length>0;
+  return React.createElement('div',{
+    className:`issue-card${answered?' answered':''}`,
+    style:{animationDelay:`${Math.min(idx,12)*35}ms`},
   },
-    React.createElement('div', { className: 'issue-header' },
-      React.createElement('div', { className: 'issue-badges' },
-        React.createElement('span', { className: `badge ${cat.bCls}` }, cat.label),
-        React.createElement('span', { className: `badge ${sev.cls}` }, sev.label),
-        answered && React.createElement('span', { className: 'badge b-answered' }, '✓ answered'),
+    React.createElement('div',{className:`issue-stripe ${cat.stripe}`}),
+    React.createElement('div',{className:'issue-inner'},
+      React.createElement('div',{className:'issue-top'},
+        React.createElement('div',{className:'issue-badges'},
+          React.createElement('span',{className:`badge ${cat.cb}`},cat.label),
+          React.createElement('span',{className:`badge ${sev.cls}`},sev.l),
+          answered&&React.createElement('span',{className:'badge b-ok'},'✓ answered'),
+        ),
+        React.createElement('span',{className:'issue-num'},`#${idx+1}`),
       ),
-      React.createElement('span', { className: 'issue-num' }, `#${index + 1}`),
-    ),
-    React.createElement('div', { className: 'issue-title' }, issue.title),
-    React.createElement('div', { className: 'issue-desc' }, issue.description),
-    React.createElement('div', { className: 'issue-q' }, issue.question),
-    React.createElement('textarea', {
-      ref: taRef,
-      className: 'issue-textarea',
-      value: local,
-      onChange,
-      placeholder: 'Your answer…',
-    }),
-    React.createElement('div', null,
-      React.createElement('button', {
-        className: 'btn-suggest',
-        onClick: () => onSuggest(issue.id),
-        disabled: issue.loadingSuggestions,
-      },
+      React.createElement('div',{className:'issue-title'},issue.title),
+      React.createElement('div',{className:'issue-desc'},issue.description),
+      React.createElement('div',{className:'issue-q'},issue.question),
+      React.createElement('textarea',{ref:ta,className:'issue-textarea',value:local,onChange,placeholder:'Your answer…'}),
+      React.createElement('button',{className:'suggest-btn',onClick:()=>onSuggest(issue.id),disabled:issue.loadingSuggestions},
         issue.loadingSuggestions
-          ? React.createElement(React.Fragment, null, React.createElement('span', { className: 'spinner', style: { width: 10, height: 10 } }), 'Thinking…')
+          ? React.createElement(React.Fragment,null,React.createElement('span',{className:'spinner',style:{width:11,height:11}}),'Thinking…')
           : '💡 Suggest answers'
       ),
-    ),
-    issue.suggestions?.length > 0 && React.createElement('div', { className: 'suggestions' },
-      issue.suggestions.map((s, i) =>
-        React.createElement('button', {
-          key: i, className: 'suggestion-pill', onClick: () => onPill(s.answer),
-        },
-          s.label,
-          React.createElement('span', { className: 'pill-tooltip' }, s.answer),
+      issue.suggestions?.length>0&&React.createElement('div',{className:'suggestions'},
+        issue.suggestions.map((s,i)=>
+          React.createElement('button',{key:i,className:'s-pill',onClick:()=>onPill(s.answer)},
+            s.label, React.createElement('span',{className:'s-tooltip'},s.answer)
+          )
         )
-      )
+      ),
     ),
   );
 }
 
-// ── App ──────────────────────────────────────────────────
+// ── App ──────────────────────────────────────
 function App() {
-  const [st, setSt] = useState({
-    stage: S.INPUT,
-    rawDoc: '', currentDoc: '', finalDoc: '',
-    iteration: 0, maxIterations: 4,
-    summary: '', issues: [],
-    goldfishResult: null,
-    feed: [],
-    error: null, loading: false,
-    copyStatus: 'idle',
+  const [st,setSt]=useState({
+    stage:S.INPUT, rawDoc:'', currentDoc:'', finalDoc:'',
+    iteration:0, maxIterations:4, assessment:'', issues:[],
+    goldfishResult:null, feed:[], error:null, loading:false, copyStatus:'idle',
+    docSummary:null, summarizing:false,
   });
+  const rightRef=useRef(null);
 
-  const rightRef = useRef(null);
+  const log=useCallback((type,text)=>setSt(s=>({...s,feed:[...s.feed,{type,text,id:Math.random()}]})),[]);
 
-  const log = useCallback((type, text) =>
-    setSt(s => ({ ...s, feed: [...s.feed, { type, text, id: Math.random() }] }))
-  , []);
+  useEffect(()=>{ if(rightRef.current) rightRef.current.scrollTop=rightRef.current.scrollHeight; },[st.feed,st.issues,st.stage]);
 
-  useEffect(() => {
-    if (rightRef.current) rightRef.current.scrollTop = rightRef.current.scrollHeight;
-  }, [st.feed, st.issues, st.stage]);
-
-  // ── Elephant ──
-  const runElephant = useCallback(async (doc, iter) => {
-    setSt(s => ({ ...s, stage: S.ELEPHANT, loading: true, error: null }));
-    log('elephant', `Elephant analysis started (iteration ${iter + 1})…`);
+  // Summarize
+  const handleSummarize=useCallback(async()=>{
+    if(!st.rawDoc.trim()||st.summarizing) return;
+    setSt(s=>({...s,summarizing:true,docSummary:null,error:null}));
     try {
-      const raw = await callAI(P.elephantSystem, P.elephantUser(doc));
-      const parsed = parseJSON(raw);
-      const issues = (parsed.issues || []).map(i => ({ ...i, userAnswer: '', suggestions: [], loadingSuggestions: false }));
-      log('elephant', `Found ${issues.length} issue(s). ${parsed.summary}`);
-      setSt(s => ({ ...s, stage: S.QA, summary: parsed.summary, issues, loading: false, iteration: iter + 1 }));
-    } catch (e) {
-      setSt(s => ({ ...s, loading: false, error: `Elephant failed: ${e.message}`, stage: S.INPUT }));
+      const raw=await callAI(P.sumSys,P.sumUsr(st.rawDoc),800);
+      const parsed=parseJ(raw);
+      setSt(s=>({...s,summarizing:false,docSummary:parsed}));
+    } catch(e) {
+      setSt(s=>({...s,summarizing:false,error:`Summarize failed: ${e.message}`}));
     }
-  }, [log]);
+  },[st.rawDoc,st.summarizing]);
 
-  const handleForge = useCallback(async () => {
-    if (!st.rawDoc.trim()) return;
-    setSt(s => ({ ...s, currentDoc: s.rawDoc, feed: [], iteration: 0 }));
-    log('system', 'Forge initiated…');
-    await runElephant(st.rawDoc, 0);
-  }, [st.rawDoc, runElephant, log]);
-
-  // ── Suggest ──
-  const handleSuggest = useCallback(async id => {
-    const issue = st.issues.find(i => i.id === id);
-    if (!issue) return;
-    setSt(s => ({ ...s, issues: s.issues.map(i => i.id === id ? { ...i, loadingSuggestions: true } : i) }));
+  // Elephant
+  const runElephant=useCallback(async(doc,iter)=>{
+    setSt(s=>({...s,stage:S.ELEPHANT,loading:true,error:null}));
+    log('elephant',`Elephant analysis started (iteration ${iter+1})…`);
     try {
-      const raw = await callAI(P.suggestSystem, P.suggestUser(issue, st.currentDoc.slice(0, 1500)), 1000);
-      const parsed = parseJSON(raw);
-      setSt(s => ({ ...s, issues: s.issues.map(i => i.id === id ? { ...i, suggestions: parsed.suggestions || [], loadingSuggestions: false } : i) }));
-    } catch (e) {
-      setSt(s => ({ ...s, issues: s.issues.map(i => i.id === id ? { ...i, loadingSuggestions: false } : i), error: `Suggest failed: ${e.message}` }));
+      const raw=await callAI(P.eleSys,P.eleUsr(doc));
+      const parsed=parseJ(raw);
+      const issues=(parsed.issues||[]).map(i=>({...i,userAnswer:'',suggestions:[],loadingSuggestions:false}));
+      log('elephant',`Found ${issues.length} issue(s). ${parsed.summary}`);
+      setSt(s=>({...s,stage:S.QA,assessment:parsed.summary,issues,loading:false,iteration:iter+1}));
+    } catch(e) {
+      setSt(s=>({...s,loading:false,error:`Elephant failed: ${e.message}`,stage:S.INPUT}));
     }
-  }, [st.issues, st.currentDoc]);
+  },[log]);
 
-  const handleAnswer = useCallback((id, val) =>
-    setSt(s => ({ ...s, issues: s.issues.map(i => i.id === id ? { ...i, userAnswer: val } : i) }))
-  , []);
+  const handleForge=useCallback(async()=>{
+    if(!st.rawDoc.trim()) return;
+    setSt(s=>({...s,currentDoc:s.rawDoc,feed:[],iteration:0,docSummary:null}));
+    log('system','Forge initiated…');
+    await runElephant(st.rawDoc,0);
+  },[st.rawDoc,runElephant,log]);
 
-  // ── Goldfish ──
-  const runGoldfish = useCallback(async doc => {
-    setSt(s => ({ ...s, stage: S.GOLDFISH, loading: true, error: null }));
-    log('goldfish', 'Goldfish test — reading doc with zero prior context…');
+  // Suggest
+  const handleSuggest=useCallback(async id=>{
+    const issue=st.issues.find(i=>i.id===id); if(!issue) return;
+    setSt(s=>({...s,issues:s.issues.map(i=>i.id===id?{...i,loadingSuggestions:true}:i)}));
     try {
-      const raw = await callAI(P.goldfishSystem, P.goldfishUser(doc), 3000);
-      const parsed = parseJSON(raw);
-      log(parsed.verdict === 'PASS' ? 'pass' : 'fail',
-        parsed.verdict === 'PASS'
-          ? `PASS — ${parsed.pass_reason}`
-          : `FAIL — ${parsed.failures?.length || 0} blocker(s)`
-      );
-      setSt(s => {
-        if (parsed.verdict === 'PASS') {
-          return { ...s, goldfishResult: parsed, finalDoc: doc, stage: S.COMPLETE, loading: false };
-        } else if (s.iteration >= s.maxIterations) {
-          return { ...s, goldfishResult: parsed, finalDoc: doc, stage: S.MAX, loading: false };
-        } else {
-          const issues = (parsed.failures || []).map(f => ({ ...f, userAnswer: '', suggestions: [], loadingSuggestions: false }));
-          return { ...s, goldfishResult: parsed, stage: S.QA, issues, summary: `Goldfish failed — ${parsed.system_comprehension}`, loading: false };
-        }
+      const raw=await callAI(P.sugSys,P.sugUsr(issue,st.currentDoc.slice(0,1500)),1000);
+      const parsed=parseJ(raw);
+      setSt(s=>({...s,issues:s.issues.map(i=>i.id===id?{...i,suggestions:parsed.suggestions||[],loadingSuggestions:false}:i)}));
+    } catch(e) {
+      setSt(s=>({...s,issues:s.issues.map(i=>i.id===id?{...i,loadingSuggestions:false}:i),error:`Suggest failed: ${e.message}`}));
+    }
+  },[st.issues,st.currentDoc]);
+
+  const handleAnswer=useCallback((id,val)=>
+    setSt(s=>({...s,issues:s.issues.map(i=>i.id===id?{...i,userAnswer:val}:i)}))
+  ,[]);
+
+  // Goldfish
+  const runGoldfish=useCallback(async doc=>{
+    setSt(s=>({...s,stage:S.GOLDFISH,loading:true,error:null}));
+    log('goldfish','Goldfish test — zero prior context…');
+    try {
+      const raw=await callAI(P.golSys,P.golUsr(doc),3000);
+      const parsed=parseJ(raw);
+      log(parsed.verdict==='PASS'?'pass':'fail',
+        parsed.verdict==='PASS'?`PASS — ${parsed.pass_reason?.slice(0,120)}…`:`FAIL — ${parsed.failures?.length||0} blocker(s)`);
+      setSt(s=>{
+        if(parsed.verdict==='PASS') return {...s,goldfishResult:parsed,finalDoc:doc,stage:S.COMPLETE,loading:false};
+        if(s.iteration>=s.maxIterations) return {...s,goldfishResult:parsed,finalDoc:doc,stage:S.MAX,loading:false};
+        const issues=(parsed.failures||[]).map(f=>({...f,userAnswer:'',suggestions:[],loadingSuggestions:false}));
+        return {...s,goldfishResult:parsed,stage:S.QA,issues,assessment:`Goldfish failed — ${parsed.system_comprehension}`,loading:false};
       });
-    } catch (e) {
-      setSt(s => ({ ...s, loading: false, error: `Goldfish failed: ${e.message}`, stage: S.REVISING }));
+    } catch(e) {
+      setSt(s=>({...s,loading:false,error:`Goldfish failed: ${e.message}`,stage:S.REVISING}));
     }
-  }, [log]);
+  },[log]);
 
-  // ── Revise ──
-  const handleRevise = useCallback(async () => {
-    setSt(s => ({ ...s, stage: S.REVISING, loading: true, error: null }));
-    log('revision', 'Revising document…');
-    const ia = st.issues
-      .filter(i => i.userAnswer.trim())
-      .map(i => `ISSUE [${i.category}]: ${i.title}\nQUESTION: ${i.question}\nANSWER: ${i.userAnswer.trim()}`)
-      .join('\n\n---\n\n');
+  // Revise
+  const handleRevise=useCallback(async()=>{
+    setSt(s=>({...s,stage:S.REVISING,loading:true,error:null}));
+    log('revision','Revising document…');
+    const ia=st.issues.filter(i=>i.userAnswer.trim())
+      .map(i=>`ISSUE [${i.category}]: ${i.title}\nQUESTION: ${i.question}\nANSWER: ${i.userAnswer.trim()}`).join('\n\n---\n\n');
     try {
-      const revised = await callAI(P.revisionSystem, P.revisionUser(st.currentDoc, ia), 6000);
-      log('revision', `Revised. Running Goldfish…`);
-      setSt(s => ({ ...s, currentDoc: revised, loading: false }));
+      const revised=await callAI(P.revSys,P.revUsr(st.currentDoc,ia),6000);
+      log('revision','Document revised. Running Goldfish…');
+      setSt(s=>({...s,currentDoc:revised,loading:false}));
       await runGoldfish(revised);
-    } catch (e) {
-      setSt(s => ({ ...s, loading: false, error: `Revision failed: ${e.message}`, stage: S.QA }));
+    } catch(e) {
+      setSt(s=>({...s,loading:false,error:`Revision failed: ${e.message}`,stage:S.QA}));
     }
-  }, [st.issues, st.currentDoc, runGoldfish, log]);
+  },[st.issues,st.currentDoc,runGoldfish,log]);
 
-  const blockers = useMemo(() => st.issues.filter(i => i.severity === 'BLOCKER' && !i.userAnswer.trim()).length, [st.issues]);
-  const answered = useMemo(() => st.issues.filter(i => i.userAnswer.trim()).length, [st.issues]);
-  const isRunning = [S.ELEPHANT, S.REVISING, S.GOLDFISH].includes(st.stage);
+  const blockers=useMemo(()=>st.issues.filter(i=>i.severity==='BLOCKER'&&!i.userAnswer.trim()).length,[st.issues]);
+  const answered=useMemo(()=>st.issues.filter(i=>i.userAnswer.trim()).length,[st.issues]);
+  const isRunning=[S.ELEPHANT,S.REVISING,S.GOLDFISH].includes(st.stage);
+  const isQA=st.stage===S.QA;
 
-  const handleCopy = useCallback(async () => {
-    try { await navigator.clipboard.writeText(st.finalDoc); setSt(s => ({ ...s, copyStatus: 'copied' })); setTimeout(() => setSt(s => ({ ...s, copyStatus: 'idle' })), 2000); } catch {}
-  }, [st.finalDoc]);
+  const handleCopy=useCallback(async()=>{
+    try { await navigator.clipboard.writeText(st.finalDoc); setSt(s=>({...s,copyStatus:'ok'})); setTimeout(()=>setSt(s=>({...s,copyStatus:'idle'})),2200); } catch{}
+  },[st.finalDoc]);
 
-  const handleReset = useCallback(() =>
-    setSt(s => ({ stage: S.INPUT, rawDoc: '', currentDoc: '', finalDoc: '', iteration: 0, maxIterations: 4, summary: '', issues: [], goldfishResult: null, feed: [], error: null, loading: false, copyStatus: 'idle' }))
-  , []);
+  const handleReset=useCallback(()=>
+    setSt({stage:S.INPUT,rawDoc:'',currentDoc:'',finalDoc:'',iteration:0,maxIterations:4,assessment:'',issues:[],goldfishResult:null,feed:[],error:null,loading:false,copyStatus:'idle',docSummary:null,summarizing:false})
+  ,[]);
 
-  // ── Header ──
-  const header = React.createElement('header', { className: 'header' },
-    React.createElement('div', { className: 'header-left' },
-      React.createElement('div', { className: 'logo-diamond' }),
-      React.createElement('span', { className: 'logo-name' }, 'DesignDoc Forge'),
-      React.createElement('span', { className: 'logo-tag' }, 'Elephant-Goldfish'),
+  const clearErr=()=>setSt(s=>({...s,error:null}));
+
+  // ── HEADER ──
+  const header = React.createElement('header',{className:'hdr'},
+    React.createElement('div',{className:'logo'},
+      React.createElement('div',{className:'logo-gem'}),
+      React.createElement('span',{className:'logo-name'},'DesignDoc Forge'),
+      React.createElement('span',{className:'logo-tag'},'AI Pipeline'),
     ),
-    React.createElement(PipelineTracker, { stage: st.stage }),
-    React.createElement('div', { className: 'header-right' },
-      st.iteration > 0 && React.createElement('span', { className: 'iter-badge' }, `iter ${st.iteration}/${st.maxIterations}`),
-      React.createElement(ElapsedTimer, { running: isRunning }),
+    React.createElement(Pipeline,{stage:st.stage}),
+    React.createElement('div',{className:'hdr-meta'},
+      st.iteration>0&&React.createElement('span',{className:'hdr-iter'},`${st.iteration}/${st.maxIterations} iter`),
+      React.createElement(Timer,{on:isRunning}),
     ),
   );
 
-  // ── Input screen ──
-  if (st.stage === S.INPUT) {
-    const canRun = st.rawDoc.trim().length > 50;
-    return React.createElement(React.Fragment, null,
+  // ── INPUT SCREEN ──
+  if (st.stage===S.INPUT) {
+    const canRun=st.rawDoc.trim().length>50;
+    const canSum=st.rawDoc.trim().length>80&&!st.summarizing;
+    return React.createElement(React.Fragment,null,
       header,
-      React.createElement('main', { className: 'screen-input' },
-        React.createElement('div', { className: 'hero' },
-          React.createElement('div', { className: 'hero-pill' },
-            React.createElement('span', { style: { width: 5, height: 5, background: 'currentColor', display: 'inline-block', borderRadius: '50%' } }),
-            'Human-in-the-loop pipeline'
-          ),
-          React.createElement('h2', null, 'Stress-test your design before you write a line of code.'),
-          React.createElement('p', null, 'The Elephant finds every gap. You answer every question. The Goldfish reads the result cold. Loop until it passes.'),
+      React.createElement('main',{className:'screen-input'},
+        React.createElement('div',{className:'input-eyebrow'},
+          React.createElement('div',{className:'eyebrow-pulse'}),
+          'Human-in-the-loop Design Review'
         ),
-        React.createElement('div', { className: 'input-box' },
-          React.createElement('textarea', {
-            value: st.rawDoc,
-            onChange: e => setSt(s => ({ ...s, rawDoc: e.target.value })),
-            placeholder: 'Paste your design document here — architecture decisions, feature specs, system design, API contracts, anything…',
+        React.createElement('h1',{className:'input-h1'},'Make your design doc production-ready.'),
+        React.createElement('p',{className:'input-sub'},'The Elephant finds every gap. You answer every question. The Goldfish reads cold. Loop until it passes.'),
+
+        React.createElement('div',{className:'input-form'},
+          React.createElement('textarea',{
+            className:'doc-textarea',
+            value:st.rawDoc,
+            onChange:e=>setSt(s=>({...s,rawDoc:e.target.value,docSummary:null})),
+            placeholder:'Paste your design document here — architecture decisions, feature specs, system design, API contracts, anything…',
           }),
-          React.createElement('div', { className: 'input-footer' },
-            React.createElement('span', { className: 'char-count' }, `${st.rawDoc.length.toLocaleString()} chars`),
-            React.createElement('button', { className: 'btn-primary', onClick: handleForge, disabled: !canRun }, 'Run Through The Forge →'),
+          React.createElement('div',{className:'input-row'},
+            React.createElement('div',{className:'input-row-left'},
+              React.createElement('span',{className:'char-count'},st.rawDoc.length?`${st.rawDoc.length.toLocaleString()} chars`:''),
+              React.createElement('button',{
+                className:'btn-glass btn',
+                onClick:handleSummarize,
+                disabled:!canSum,
+                style:{fontSize:13},
+              },
+                st.summarizing
+                  ? React.createElement(React.Fragment,null,React.createElement('span',{className:'spinner',style:{width:12,height:12}}),'Summarizing…')
+                  : '📋 Summarize Doc'
+              ),
+            ),
+            React.createElement('button',{className:'btn btn-amber',onClick:handleForge,disabled:!canRun},'Run Through The Forge →'),
+          ),
+
+          // Doc summary panel
+          (st.summarizing||st.docSummary)&&React.createElement('div',{className:'summary-panel'},
+            st.summarizing
+              ? React.createElement('div',{className:'summarizing-state'},
+                  React.createElement('span',{className:'spinner'}),
+                  React.createElement('span',null,'Summarizing your document…')
+                )
+              : st.docSummary&&React.createElement(React.Fragment,null,
+                  React.createElement('div',{className:'summary-panel-hdr'},
+                    React.createElement('div',{className:'summary-panel-title-row'},
+                      React.createElement('span',{className:'summary-panel-label'},'📋 Doc Summary'),
+                    ),
+                    React.createElement('button',{className:'summary-close',onClick:()=>setSt(s=>({...s,docSummary:null}))}, '×'),
+                  ),
+                  React.createElement('div',{className:'summary-content'},
+                    React.createElement('div',null,
+                      React.createElement('div',{className:'summary-what'},st.docSummary.title),
+                      React.createElement('div',{className:'summary-what-sub'},st.docSummary.what),
+                    ),
+                    React.createElement('div',{className:'summary-cols'},
+                      React.createElement('div',null,
+                        React.createElement('div',{className:'summary-col-hd'},'Scope'),
+                        React.createElement('div',{className:'summary-pill-list'},
+                          (st.docSummary.scope||[]).map((x,i)=>React.createElement('div',{key:i,className:'summary-item'},x))
+                        ),
+                      ),
+                      React.createElement('div',null,
+                        React.createElement('div',{className:'summary-col-hd'},'Decisions Made'),
+                        React.createElement('div',{className:'summary-pill-list'},
+                          (st.docSummary.decisions||[]).map((x,i)=>React.createElement('div',{key:i,className:'summary-item'},x))
+                        ),
+                      ),
+                      React.createElement('div',null,
+                        React.createElement('div',{className:'summary-col-hd'},'Obvious Gaps'),
+                        React.createElement('div',{className:'summary-pill-list'},
+                          (st.docSummary.gaps||[]).map((x,i)=>React.createElement('div',{key:i,className:'summary-item summary-gap-item'},x))
+                        ),
+                      ),
+                    ),
+                  ),
+                )
           ),
         ),
-        st.error && React.createElement('div', { className: 'error-banner', style: { maxWidth: 680, width: '100%' } },
-          React.createElement('span', null, st.error),
-          React.createElement('button', { className: 'error-dismiss', onClick: () => setSt(s => ({ ...s, error: null })) }, '×'),
+
+        st.error&&React.createElement('div',{className:'err-banner',style:{width:'100%',maxWidth:700,marginTop:14}},
+          React.createElement('span',null,st.error),
+          React.createElement('button',{className:'err-x',onClick:clearErr},'×'),
         ),
       ),
     );
   }
 
-  // ── Complete screen ──
-  if (st.stage === S.COMPLETE || st.stage === S.MAX) {
-    const isPass = st.stage === S.COMPLETE;
-    return React.createElement(React.Fragment, null,
+  // ── COMPLETE SCREEN ──
+  if (st.stage===S.COMPLETE||st.stage===S.MAX) {
+    const isPass=st.stage===S.COMPLETE;
+    return React.createElement(React.Fragment,null,
       header,
-      React.createElement('main', { className: 'screen-complete' },
-        // Left — final doc
-        React.createElement('div', { className: 'panel-left' },
-          React.createElement('div', { className: 'panel-header' },
-            React.createElement('div', { className: 'panel-label' },
-              React.createElement('div', { className: 'panel-label-dot', style: { background: isPass ? 'var(--green)' : 'var(--amber)' } }),
-              isPass ? 'Final Document — Production Ready' : 'Best Document — Max Iterations Reached',
+      React.createElement('main',{className:'screen-complete'},
+        React.createElement('div',{className:'panel-l'},
+          React.createElement('div',{className:'panel-hdr'},
+            React.createElement('div',{className:'panel-lbl'},
+              React.createElement('div',{className:'panel-dot',style:{background:isPass?'var(--grn)':'var(--amber)'}}),
+              isPass?'Final Document — Production Ready':'Best Document — Max Iterations Reached',
             ),
-            React.createElement('button', { className: `copy-btn ${st.copyStatus === 'copied' ? 'copied' : ''}`, onClick: handleCopy },
-              st.copyStatus === 'copied' ? '✓ Copied' : 'Copy Markdown'
+            React.createElement('button',{className:`copy-btn${st.copyStatus==='ok'?' ok':''}`,onClick:handleCopy},
+              st.copyStatus==='ok'?'✓ Copied':'Copy Markdown'
             ),
           ),
-          React.createElement('div', { className: 'panel-doc' },
-            React.createElement('div', { className: 'md-doc', dangerouslySetInnerHTML: { __html: mdToHtml(st.finalDoc) } }),
+          React.createElement('div',{className:'panel-body'},
+            React.createElement('div',{className:'md',dangerouslySetInnerHTML:{__html:md(st.finalDoc)}}),
           ),
         ),
-        // Right — result
-        React.createElement('div', { className: 'result-sidebar' },
-          React.createElement('div', { className: `pass-card ${isPass ? 'pass-state' : 'warn-state'}` },
-            React.createElement('div', { className: `pass-title ${isPass ? 'pass-state' : 'warn-state'}` }, isPass ? '✓ PASS' : '⚠ MAX'),
-            React.createElement('div', { className: 'pass-sub' },
-              isPass
-                ? `Passed in ${st.iteration} iteration${st.iteration !== 1 ? 's' : ''}.`
-                : `Reached ${st.maxIterations} iterations without a full Goldfish pass.`
+        React.createElement('div',{className:'complete-sidebar'},
+          React.createElement('div',{className:`pass-card${isPass?' is-pass':' is-warn'}`},
+            React.createElement('span',{className:`pass-icon${isPass?' is-pass':' is-warn'}`},isPass?'PASS':'MAX'),
+            React.createElement('div',{className:'pass-tag'},isPass?'Goldfish Approved':'Iteration Limit Reached'),
+            React.createElement('div',{className:'pass-sub'},
+              isPass?`Cleared in ${st.iteration} iteration${st.iteration!==1?'s':''}.`:`Hit ${st.maxIterations} iterations. Best doc shown.`
             ),
-            isPass && st.goldfishResult?.pass_reason &&
-              React.createElement('div', { className: 'pass-reason' }, st.goldfishResult.pass_reason),
+            isPass&&st.goldfishResult?.pass_reason&&React.createElement('div',{className:'pass-reason'},st.goldfishResult.pass_reason),
           ),
-          st.goldfishResult?.system_comprehension && React.createElement('div', { className: 'comprehension-card' },
-            React.createElement('div', { className: 'section-label' }, '🐟 Goldfish Comprehension'),
-            React.createElement('div', { style: { fontSize: 12, color: 'var(--text-2)', lineHeight: 1.65 } }, st.goldfishResult.system_comprehension),
+          st.goldfishResult?.system_comprehension&&React.createElement('div',{className:'info-card'},
+            React.createElement('div',{className:'info-hd'},'🐟 Goldfish Comprehension'),
+            React.createElement('div',{className:'info-body'},st.goldfishResult.system_comprehension),
           ),
-          st.feed.length > 0 && React.createElement('div', null,
-            React.createElement('div', { className: 'section-label', style: { marginBottom: 6 } }, 'Pipeline Log'),
-            ...st.feed.map(e => React.createElement('div', { key: e.id, className: 'activity-entry' },
-              React.createElement('span', { className: 'activity-icon' }, e.type === 'elephant' ? '🐘' : e.type === 'goldfish' ? '🐟' : e.type === 'revision' ? '✏️' : e.type === 'pass' ? '✅' : e.type === 'fail' ? '❌' : '·'),
-              React.createElement('span', null, e.text),
+          st.feed.length>0&&React.createElement('div',{className:'info-card',style:{opacity:1,animation:'none'}},
+            React.createElement('div',{className:'info-hd'},'Pipeline Log'),
+            st.feed.map(e=>React.createElement('div',{key:e.id,className:'activity-entry'},
+              React.createElement('span',null,e.type==='elephant'?'🐘':e.type==='goldfish'?'🐟':e.type==='revision'?'✏️':e.type==='pass'?'✅':e.type==='fail'?'❌':'·'),
+              React.createElement('span',null,e.text),
             ))
           ),
-          React.createElement('button', { className: 'btn-ghost', onClick: handleReset, style: { alignSelf: 'flex-start' } }, '← Forge Another Doc'),
+          React.createElement('button',{className:'btn btn-ghost',onClick:handleReset},'← Forge Another Doc'),
         ),
       ),
     );
   }
 
-  // ── Work screen ──
-  const isQA = st.stage === S.QA;
-
-  return React.createElement(React.Fragment, null,
+  // ── WORK SCREEN ──
+  return React.createElement(React.Fragment,null,
     header,
-    React.createElement('main', { className: 'screen-work' },
-
-      // Left panel — live doc
-      React.createElement('div', { className: 'panel-left' },
-        React.createElement('div', { className: 'panel-header' },
-          React.createElement('div', { className: 'panel-label' },
-            React.createElement('div', { className: 'panel-label-dot' }),
+    React.createElement('main',{className:'screen-work'},
+      React.createElement('div',{className:'panel-l'},
+        React.createElement('div',{className:'panel-hdr'},
+          React.createElement('div',{className:'panel-lbl'},
+            React.createElement('div',{className:'panel-dot'}),
             'Live Document',
           ),
         ),
-        st.currentDoc
-          ? React.createElement('div', { className: 'panel-doc' },
-              React.createElement('div', { className: 'md-doc', dangerouslySetInnerHTML: { __html: mdToHtml(st.currentDoc) } }),
-            )
-          : React.createElement('div', { className: 'empty-doc' }, 'Document will appear here after first revision'),
+        React.createElement('div',{className:'panel-body'},
+          st.currentDoc
+            ? React.createElement('div',{className:'md',dangerouslySetInnerHTML:{__html:md(st.currentDoc)}})
+            : React.createElement('div',{className:'empty-doc'},
+                React.createElement('div',{className:'empty-doc-icon'},'📄'),
+                React.createElement('div',{className:'empty-doc-text'},'Document appears here after revision'),
+              )
+        ),
       ),
-
-      // Right panel — Q&A / activity
-      React.createElement('div', { className: 'panel-right', ref: rightRef },
-
-        // Error
-        st.error && React.createElement('div', { className: 'error-banner' },
-          React.createElement('span', null, st.error),
-          React.createElement('button', { className: 'error-dismiss', onClick: () => setSt(s => ({ ...s, error: null })) }, '×'),
-        ),
-
-        // Loading card
-        isRunning && React.createElement('div', { className: 'loading-card' },
-          React.createElement('div', { className: 'spinner' }),
-          React.createElement('span', { className: 'loading-text' },
-            st.stage === S.ELEPHANT ? '🐘 Elephant analyzing…' :
-            st.stage === S.REVISING ? '✏️ Revising document…' :
-            '🐟 Goldfish testing…'
+      React.createElement('div',{className:'panel-r'},
+        React.createElement('div',{className:'panel-hdr'},
+          React.createElement('div',{className:'panel-lbl'},
+            React.createElement('div',{className:'panel-dot',style:{opacity:isRunning?1:0.4,animation:isRunning?'glow-a 1.8s ease-in-out infinite':''}}),
+            isQA?`${st.issues.length} Issues to Resolve`:
+            st.stage===S.ELEPHANT?'Elephant Analyzing…':
+            st.stage===S.REVISING?'Revising Document…':
+            st.stage===S.GOLDFISH?'Goldfish Testing…':'',
           ),
-          React.createElement(ElapsedTimer, { running: isRunning }),
+          isQA&&React.createElement('span',{className:'hdr-iter',style:{fontSize:10}},`${answered}/${st.issues.length} answered`),
         ),
-
-        // Summary
-        st.summary && React.createElement('div', { className: 'summary-card' },
-          React.createElement('div', { className: 'summary-label' }, st.iteration > 1 ? '🐟 Goldfish Verdict' : '🐘 Elephant Assessment'),
-          React.createElement('div', { className: 'summary-text' }, st.summary),
-        ),
-
-        // Q&A
-        isQA && st.issues.length > 0 && React.createElement(React.Fragment, null,
-          React.createElement('div', { className: 'issues-meta' },
-            React.createElement('span', null, `${st.issues.length} issue${st.issues.length !== 1 ? 's' : ''} · ${answered} answered`),
-            blockers > 0 && React.createElement('span', { className: 'blocker-warn' }, `${blockers} blocker${blockers !== 1 ? 's' : ''} required`),
+        React.createElement('div',{className:'panel-r-scroll',ref:rightRef},
+          st.error&&React.createElement('div',{className:'err-banner'},
+            React.createElement('span',null,st.error),
+            React.createElement('button',{className:'err-x',onClick:clearErr},'×'),
           ),
-          ...st.issues.map((issue, i) =>
-            React.createElement(IssueCard, { key: issue.id, issue, index: i, onAnswer: handleAnswer, onSuggest: handleSuggest })
-          ),
-          React.createElement('div', { className: 'revise-bar' },
-            React.createElement('button', {
-              className: 'revise-btn',
-              onClick: handleRevise,
-              disabled: blockers > 0,
-            },
-              blockers > 0
-                ? `Answer ${blockers} blocker${blockers !== 1 ? 's' : ''} to continue`
-                : `Revise with ${answered} answer${answered !== 1 ? 's' : ''} →`
+          isRunning&&React.createElement('div',{className:'loading-card'},
+            React.createElement('div',{className:'spinner'}),
+            React.createElement('span',{className:'loading-text'},
+              st.stage===S.ELEPHANT?'🐘 Elephant is analyzing your document…':
+              st.stage===S.REVISING?'✏️ Rewriting document with your answers…':
+              '🐟 Goldfish is reading the revised doc cold…'
             ),
-            blockers === 0 && answered < st.issues.length &&
-              React.createElement('div', { className: 'revise-hint' },
-                `${st.issues.length - answered} non-blocker${st.issues.length - answered !== 1 ? 's' : ''} left blank will become open questions`
-              ),
+            React.createElement(Timer,{on:isRunning}),
           ),
-        ),
-
-        // Activity (non-QA)
-        !isQA && st.feed.length > 0 && React.createElement('div', null,
-          React.createElement('div', { className: 'section-label', style: { marginBottom: 6 } }, 'Activity'),
-          ...st.feed.map(e => React.createElement('div', { key: e.id, className: 'activity-entry' },
-            React.createElement('span', { className: 'activity-icon' }, e.type === 'elephant' ? '🐘' : e.type === 'goldfish' ? '🐟' : e.type === 'revision' ? '✏️' : e.type === 'pass' ? '✅' : e.type === 'fail' ? '❌' : '·'),
-            React.createElement('span', null, e.text),
-          ))
+          st.assessment&&React.createElement('div',{className:'assessment-card'},
+            React.createElement('div',{className:'assessment-hdr'},
+              React.createElement('div',{className:'assessment-tag'},st.iteration>1?'🐟 Goldfish Verdict':'🐘 Elephant Assessment'),
+            ),
+            React.createElement('div',{className:'assessment-body'},st.assessment),
+          ),
+          isQA&&st.issues.length>0&&React.createElement(React.Fragment,null,
+            React.createElement('div',{className:'issues-meta'},
+              React.createElement('span',null,`${st.issues.length} issue${st.issues.length!==1?'s':''}`),
+              blockers>0&&React.createElement('span',{className:'issues-blocker'},`${blockers} blocker${blockers!==1?'s':''} required`),
+            ),
+            ...st.issues.map((issue,i)=>React.createElement(IssueCard,{key:issue.id,issue,idx:i,onAnswer:handleAnswer,onSuggest:handleSuggest})),
+            React.createElement('div',{className:'revise-bar'},
+              React.createElement('button',{className:'revise-btn btn',onClick:handleRevise,disabled:blockers>0},
+                blockers>0?`Answer ${blockers} blocker${blockers!==1?'s':''} to continue`:`Revise with ${answered} answer${answered!==1?'s':''} →`
+              ),
+              blockers===0&&answered<st.issues.length&&React.createElement('div',{className:'revise-hint'},
+                `${st.issues.length-answered} non-blocker${st.issues.length-answered!==1?'s':''} left blank → becomes Open Questions`
+              ),
+            ),
+          ),
+          !isQA&&st.feed.length>0&&React.createElement('div',null,
+            React.createElement('div',{className:'activity-lbl'},'Activity'),
+            st.feed.map(e=>React.createElement('div',{key:e.id,className:'activity-entry'},
+              React.createElement('span',null,e.type==='elephant'?'🐘':e.type==='goldfish'?'🐟':e.type==='revision'?'✏️':e.type==='pass'?'✅':e.type==='fail'?'❌':'·'),
+              React.createElement('span',null,e.text),
+            ))
+          ),
         ),
       ),
     ),
